@@ -1,0 +1,19 @@
+Variable,"Overall (N=12,269)","Training (N=9,815)","Test (N=2,454)",P-value
+Dataset Size,12269,9815,2454,N/A
+Insufficient Pain Management,2337.0 (19.0%),1870.0 (19.1%),467.0 (19.0%),1.00
+Heart Rate (bpm),"94.1 ± 30.8 (n=3949, missing=8320)","94.3 ± 30.7 (n=3149, missing=6666)","93.5 ± 30.9 (n=800, missing=1654)",0.52
+Heart Rate at 5 min (bpm),"91.3 ± 29.4 (n=3978, missing=8291)","91.2 ± 29.3 (n=3173, missing=6642)","91.7 ± 29.7 (n=805, missing=1649)",0.63
+Oxygen Saturation (%),"93.9 ± 6.0 (n=8822, missing=3447)","93.9 ± 5.9 (n=7079, missing=2736)","93.8 ± 6.5 (n=1743, missing=711)",0.53
+Oxygen Saturation at 11 min (%),"95.4 ± 4.1 (n=8844, missing=3425)","95.4 ± 4.0 (n=7092, missing=2723)","95.3 ± 4.7 (n=1752, missing=702)",0.29
+Glasgow Coma Scale,14.8 ± 0.5,14.8 ± 0.5,14.8 ± 0.5,0.46
+Glasgow Coma Scale at 7 min,"14.7 ± 1.0 (n=12261, missing=8)","14.7 ± 1.0 (n=9808, missing=7)","14.7 ± 1.0 (n=2453, missing=1)",0.72
+VAS Pain Score at Scene,4.6 ± 3.5,4.6 ± 3.5,4.7 ± 3.4,0.85
+Normal Heart Rate,10736 (87.5%),8589 (87.5%),2147 (87.5%),1.00
+Tachycardia,664 (5.4%),529 (5.4%),135 (5.5%),0.87
+Severe Tachycardia,563 (4.6%),448 (4.6%),115 (4.7%),0.84
+Normal Oxygen Saturation,7777 (63.4%),6237 (63.5%),1540 (62.8%),0.48
+Severe Hypoxia,1584 (12.9%),1239 (12.6%),345 (14.1%),0.06
+Female Gender,4768 (38.9%),3830 (39.0%),938 (38.2%),0.48
+Unknown Gender,5 (0.0%),5 (0.1%),0 (0.0%),0.58
+No Resuscitation Performed,12268 (100.0%),9814 (100.0%),2454 (100.0%),1.00
+Any Chest Tube Drainage,12126 (98.8%),9705 (98.9%),2421 (98.7%),0.41
