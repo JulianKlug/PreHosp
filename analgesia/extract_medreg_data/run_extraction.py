@@ -324,7 +324,8 @@ def main():
 Examples:
     python run_extraction.py doctors.xlsx output_folder
     python run_extraction.py doctors.xlsx output_folder --max-doctors 10
-    python run_extraction.py doctors.xlsx output_folder --start-from 50 --headless
+    python run_extraction.py doctors.xlsx output_folder --start-from 50
+    python run_extraction.py doctors.xlsx output_folder --no-headless  # Run with visible browser
         """
     )
     
@@ -336,8 +337,10 @@ Examples:
                        help='Maximum number of doctors to process (default: all)')
     parser.add_argument('--start-from', type=int, default=0,
                        help='Index to start from (default: 0)')
-    parser.add_argument('--headless', action='store_true',
-                       help='Run browser in headless mode (default: False for debugging)')
+    parser.add_argument('--headless', action='store_true', default=True,
+                       help='Run browser in headless mode (default: True)')
+    parser.add_argument('--no-headless', dest='headless', action='store_false',
+                       help='Run browser with visible GUI (for debugging)')
     
     args = parser.parse_args()
     
