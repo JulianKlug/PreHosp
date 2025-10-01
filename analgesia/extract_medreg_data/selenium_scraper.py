@@ -31,6 +31,51 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def normalize_text_for_matching(text: str) -> str:
+    """
+    Normalize text for better name matching by handling umlauts and special characters
+    
+    Args:
+        text: Input text to normalize
+        
+    Returns:
+        Normalized text
+    """
+    if not text:
+        return ""
+    
+    text = text.lower().strip()
+    
+    # Handle German/Swiss umlauts and special characters
+    replacements = {
+        'ä': 'ae',
+        'ö': 'oe', 
+        'ü': 'ue',
+        'ß': 'ss',
+        'á': 'a',
+        'à': 'a',
+        'â': 'a',
+        'é': 'e',
+        'è': 'e',
+        'ê': 'e',
+        'í': 'i',
+        'ì': 'i',
+        'î': 'i',
+        'ó': 'o',
+        'ò': 'o',
+        'ô': 'o',
+        'ú': 'u',
+        'ù': 'u',
+        'û': 'u',
+        'ç': 'c',
+        'ñ': 'n'
+    }
+    
+    for original, replacement in replacements.items():
+        text = text.replace(original, replacement)
+    
+    return text
+
 class SeleniumMedRegScraper:
     """
     Selenium-based scraper for the Swiss Medical Registry website
@@ -695,31 +740,43 @@ class SeleniumMedRegScraper:
                     result_text = result.text.lower()
                     score = 0
                     
-                    # Score based on name matching
+                    # Normalize names for better matching (handles umlauts like ö ↔ oe)
+                    first_name_normalized = normalize_text_for_matching(first_name)
+                    last_name_normalized = normalize_text_for_matching(last_name)
+                    result_text_normalized = normalize_text_for_matching(result_text)
+                    
+                    # Score based on name matching with normalization
                     first_name_lower = first_name.lower()
                     last_name_lower = last_name.lower()
                     
-                    # Exact first name match
-                    if first_name_lower in result_text:
+                    # Exact first name match (original and normalized)
+                    if (first_name_lower in result_text or 
+                        first_name_normalized in result_text_normalized):
                         score += 10
                         
-                    # Exact last name match
-                    if last_name_lower in result_text:
+                    # Exact last name match (original and normalized)
+                    if (last_name_lower in result_text or 
+                        last_name_normalized in result_text_normalized):
                         score += 10
                         
-                    # Both names present
-                    if first_name_lower in result_text and last_name_lower in result_text:
+                    # Both names present (check both original and normalized)
+                    both_original = first_name_lower in result_text and last_name_lower in result_text
+                    both_normalized = first_name_normalized in result_text_normalized and last_name_normalized in result_text_normalized
+                    if both_original or both_normalized:
                         score += 20
                         
-                    # Bonus for full name match
+                    # Bonus for full name match (try multiple variations)
                     full_name_variations = [
                         f"{first_name_lower} {last_name_lower}",
                         f"{last_name_lower} {first_name_lower}",
-                        f"{last_name_lower}, {first_name_lower}"
+                        f"{last_name_lower}, {first_name_lower}",
+                        f"{first_name_normalized} {last_name_normalized}",
+                        f"{last_name_normalized} {first_name_normalized}",
+                        f"{last_name_normalized}, {first_name_normalized}"
                     ]
                     
                     for variation in full_name_variations:
-                        if variation in result_text:
+                        if variation in result_text or variation in result_text_normalized:
                             score += 30
                             break
                     
@@ -803,32 +860,45 @@ class SeleniumMedRegScraper:
                     result_text = result.text.lower()
                     score = 0
                     
-                    # Score based on name matching
+                    # Normalize names for better matching (handles umlauts like ö ↔ oe)
+                    first_name_normalized = normalize_text_for_matching(first_name)
+                    last_name_normalized = normalize_text_for_matching(last_name)
+                    result_text_normalized = normalize_text_for_matching(result_text)
+                    
+                    # Score based on name matching with normalization
                     first_name_lower = first_name.lower()
                     last_name_lower = last_name.lower()
                     
-                    # Exact first name match
-                    if first_name_lower in result_text:
+                    # Exact first name match (original and normalized)
+                    if (first_name_lower in result_text or 
+                        first_name_normalized in result_text_normalized):
                         score += 10
                         
-                    # Exact last name match
-                    if last_name_lower in result_text:
+                    # Exact last name match (original and normalized)
+                    if (last_name_lower in result_text or 
+                        last_name_normalized in result_text_normalized):
                         score += 10
                         
-                    # Both names present
-                    if first_name_lower in result_text and last_name_lower in result_text:
+                    # Both names present (check both original and normalized)
+                    both_original = first_name_lower in result_text and last_name_lower in result_text
+                    both_normalized = first_name_normalized in result_text_normalized and last_name_normalized in result_text_normalized
+                    if both_original or both_normalized:
                         score += 20
                         
-                    # Bonus for full name match (various formats)
+                    # Bonus for full name match (various formats, try both original and normalized)
                     full_name_variations = [
                         f"{first_name_lower} {last_name_lower}",
                         f"{last_name_lower} {first_name_lower}",
                         f"{last_name_lower}, {first_name_lower}",
-                        f"{first_name_lower}, {last_name_lower}"
+                        f"{first_name_lower}, {last_name_lower}",
+                        f"{first_name_normalized} {last_name_normalized}",
+                        f"{last_name_normalized} {first_name_normalized}",
+                        f"{last_name_normalized}, {first_name_normalized}",
+                        f"{first_name_normalized}, {last_name_normalized}"
                     ]
                     
                     for variation in full_name_variations:
-                        if variation in result_text:
+                        if variation in result_text or variation in result_text_normalized:
                             score += 30
                             break
                     
