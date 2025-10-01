@@ -42,7 +42,7 @@ class MedRegDataExtractor:
         self._setup_logging()
         
         # Initialize scraper
-        self.scraper = SeleniumMedRegScraper(headless=headless, delay_between_requests=3.0)
+        self.scraper = SeleniumMedRegScraper(headless=headless, delay_between_requests=1.0)
         
         self.logger.info(f"Initialized MedRegDataExtractor with output dir: {output_dir}")
     

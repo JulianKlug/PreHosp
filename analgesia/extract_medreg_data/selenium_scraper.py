@@ -36,7 +36,7 @@ class SeleniumMedRegScraper:
     Selenium-based scraper for the Swiss Medical Registry website
     """
     
-    def __init__(self, headless: bool = True, delay_between_requests: float = 3.0):
+    def __init__(self, headless: bool = True, delay_between_requests: float = 1.0):
         """
         Initialize the scraper
         
@@ -49,6 +49,7 @@ class SeleniumMedRegScraper:
         self.delay = delay_between_requests
         self.headless = headless
         self.driver = None
+        self.wait = None  # Will be initialized with WebDriver
         
         logger.info(f"Initialized SeleniumMedRegScraper with {delay_between_requests}s delay, headless={headless}")
     
@@ -57,16 +58,37 @@ class SeleniumMedRegScraper:
         chrome_options = Options()
         if self.headless:
             chrome_options.add_argument("--headless")
+        
+        # Basic Chrome optimizations
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option('useAutomationExtension', False)
         
+        # Performance optimizations
+        chrome_options.add_argument("--disable-images")  # Don't load images for faster loading
+        chrome_options.add_argument("--disable-plugins")  # Disable plugins
+        chrome_options.add_argument("--disable-extensions")  # Disable extensions
+        chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration
+        chrome_options.add_argument("--no-first-run")  # Skip first run experience
+        chrome_options.add_argument("--disable-default-apps")  # Disable default apps
+        chrome_options.add_argument("--disable-background-timer-throttling")  # Improve performance
+        chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+        chrome_options.add_argument("--disable-renderer-backgrounding")
+        chrome_options.add_argument("--disable-web-security")  # May help with SPA loading
+        
+        # Set page load strategy to 'eager' for faster loading
+        chrome_options.page_load_strategy = 'eager'
+        
         try:
             # Use webdriver-manager to automatically download and manage ChromeDriver
             service = Service(ChromeDriverManager().install())
             self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            
+            # Initialize WebDriverWait for intelligent waiting
+            self.wait = WebDriverWait(self.driver, 10)  # 10 second timeout
+            
             self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
             logger.info("Chrome driver started successfully")
         except Exception as e:
@@ -93,20 +115,37 @@ class SeleniumMedRegScraper:
         try:
             logger.info(f"Searching for: {first_name} {last_name}")
             
-            # Navigate to search page
+            # Navigate to search page fresh and clear all browser state
             self.driver.get(self.search_url)
             
             # Wait for page to load and find input fields
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "input[matInput]"))
+            )
+            
+            # Clear all browser storage and session state
+            self.driver.delete_all_cookies()
+            self.driver.execute_script("window.localStorage.clear();")
+            self.driver.execute_script("window.sessionStorage.clear();")
+            
+            # Clear any previous search state by refreshing the page
+            self.driver.refresh()
+            
+            # Wait again after refresh
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input[matInput]"))
             )            # Look for name input fields using the exact IDs found in debugging
             # The website has clear IDs: 'name' for last name and 'firstName' for first name
             
             # Wait for the form to be fully loaded
-            WebDriverWait(self.driver, 15).until(
+            self.wait.until(
                 EC.presence_of_element_located((By.ID, "name"))
             )
-            time.sleep(2)
+            
+            # Also wait for firstName field to be present
+            self.wait.until(
+                EC.presence_of_element_located((By.ID, "firstName"))
+            )
             
             name_field = None  # for last name
             firstname_field = None  # for first name
@@ -147,8 +186,60 @@ class SeleniumMedRegScraper:
             else:
                 logger.warning("Could not find first name field")
             
-            # Wait a moment after filling fields
-            time.sleep(2)
+            # Select "Physician" in the profession dropdown - CRITICAL for accurate results
+            profession_selected = False
+            max_attempts = 3
+            
+            for attempt in range(max_attempts):
+                try:
+                    logger.info(f"Attempting profession selection (attempt {attempt + 1}/{max_attempts})")
+                    
+                    # Wait for the profession dropdown to be present and clickable
+                    profession_dropdown = self.wait.until(
+                        EC.element_to_be_clickable((By.ID, "mat-select-value-3"))
+                    )
+                    
+                    # Check if "Physician" is already selected
+                    dropdown_text = profession_dropdown.text.lower()
+                    if "physician" in dropdown_text or "arzt" in dropdown_text:
+                        logger.info("Physician already selected in dropdown")
+                        profession_selected = True
+                        break
+                    
+                    # Click to open the dropdown
+                    profession_dropdown.click()
+                    logger.info("Opened profession dropdown")
+                    
+                    # Wait for dropdown options to appear and select "Physician"
+                    physician_option = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, "//mat-option[contains(.,'Physician') or contains(.,'Arzt')]"))
+                    )
+                    physician_option.click()
+                    logger.info("Clicked on 'Physician' option")
+                    
+                    # Wait a moment for selection to take effect
+                    time.sleep(0.5)
+                    
+                    # Verify the selection worked
+                    updated_dropdown_text = profession_dropdown.text.lower()
+                    if "physician" in updated_dropdown_text or "arzt" in updated_dropdown_text:
+                        logger.info("Successfully verified 'Physician' selection")
+                        profession_selected = True
+                        break
+                    else:
+                        logger.warning(f"Profession selection verification failed on attempt {attempt + 1}")
+                        
+                except Exception as e:
+                    logger.warning(f"Profession dropdown attempt {attempt + 1} failed: {e}")
+                    time.sleep(1)  # Wait before retry
+            
+            if not profession_selected:
+                logger.error("Failed to select profession after all attempts - search may return incorrect results")
+            
+            # Wait for fields to be ready for input
+            self.wait.until(
+                EC.element_to_be_clickable((By.ID, "firstName"))
+            )
             
             # Use the exact button ID found in debugging: 'button-search'
             search_submitted = False
@@ -171,14 +262,16 @@ class SeleniumMedRegScraper:
                         
                         # Ensure button is in view and clickable
                         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", search_button)
-                        time.sleep(0.5)
+                        
+                        # Wait for button to be clickable
+                        self.wait.until(EC.element_to_be_clickable((By.ID, "button-search")))
                         
                         # Execute click
                         click_method()
                         logger.info(f"Executed {method_name}")
                         
-                        # Wait and check if search was submitted
-                        time.sleep(5)
+                        # Wait for search results to load (reduced from 5s)
+                        time.sleep(2)
                         
                         # Check for results or URL change
                         current_url = self.driver.current_url
@@ -213,7 +306,9 @@ class SeleniumMedRegScraper:
                     active_field = firstname_field if firstname_field else name_field
                     if active_field:
                         active_field.send_keys("\n")
-                        time.sleep(5)
+                        
+                        # Wait for response (reduced from 5s)
+                        time.sleep(2)
                         
                         # Check if search was submitted
                         current_url = self.driver.current_url
@@ -239,7 +334,7 @@ class SeleniumMedRegScraper:
                             nameField.form.submit();
                         }
                     """)
-                    time.sleep(5)
+                    time.sleep(2)  # Reduced from 5s
                     search_submitted = True
                     logger.info("Form submitted via JavaScript")
                 except Exception as e:
@@ -254,8 +349,32 @@ class SeleniumMedRegScraper:
                 except Exception:
                     pass
             
-            # Wait for results to load - increased time for list to appear
-            time.sleep(8)  # Longer wait for results list
+            # Wait for results to load with better selector patterns
+            try:
+                # Wait for any results container to appear with longer timeout for consistency
+                WebDriverWait(self.driver, 15).until(
+                    EC.any_of(
+                        # Material UI components
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "[role='option']")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "mat-option")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".mat-list-item")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".mat-card")),
+                        # Table-based results
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "tbody tr")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "tr")),
+                        # Generic result containers
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".person-result")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, ".search-result")),
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "[role='listitem']")),
+                        # No results message
+                        EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "No result"),
+                        EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Keine Resultate")
+                    )
+                )
+                logger.info("Search results loaded successfully")
+            except TimeoutException:
+                logger.warning("Search results took longer than expected to load - proceeding with extraction anyway")
+                # Don't sleep here, just proceed
             
             # Extract results - now expecting a list of doctors to select from
             doctor_info = self._extract_doctor_info_selenium(first_name, last_name)
@@ -302,7 +421,8 @@ class SeleniumMedRegScraper:
             }
             
             # Wait for results list to appear
-            wait = WebDriverWait(self.driver, 20)
+            # Use consistent timeout with the main search wait
+            wait = WebDriverWait(self.driver, 15)
             
             # Look for result containers - try different selectors for result lists
             result_selectors = [
@@ -372,8 +492,19 @@ class SeleniumMedRegScraper:
                 doctor_data['multiple_matches'] = True
                 logger.info(f"Multiple matches found ({len(results)}) for {first_name} {last_name}, selected and clicked best match")
             
-            # After clicking, wait for detailed page to load
-            time.sleep(5)
+            # After clicking, wait for detailed page to load with intelligent waiting
+            try:
+                # Wait for detail page content to be present
+                self.wait.until(
+                    EC.any_of(
+                        EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Date of issue"),
+                        EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "physician licence"),
+                        EC.text_to_be_present_in_element((By.TAG_NAME, "body"), "Year of birth")
+                    )
+                )
+            except TimeoutException:
+                # Fallback to short wait
+                time.sleep(2)
             
             # Now extract detailed information from the doctor's detail page
             detail_page_text = self.driver.find_element(By.TAG_NAME, "body").text
@@ -592,13 +723,43 @@ class SeleniumMedRegScraper:
                             score += 30
                             break
                     
+                    # CRITICAL: Must be a physician (not dentist, pharmacist, veterinarian, etc.)
+                    if "physician" in result_text:
+                        score += 50  # Strong bonus for being a physician
+                    elif any(non_physician in result_text for non_physician in ["dentist", "pharmacist", "veterinarian", "chiropractor"]):
+                        score -= 100  # Heavy penalty for non-physicians
+                        
+                    # PRIORITY: Emergency medicine specialists (anesthesiology, intensive care)
+                    emergency_specialties = [
+                        "anaesthesiology", "anesthesiology", 
+                        "intensive care medicine", "intensive care",
+                        "emergency medicine", "emergency physician"
+                    ]
+                    
+                    for specialty in emergency_specialties:
+                        if specialty in result_text:
+                            score += 100  # Very high bonus for emergency medicine specialists
+                            logger.info(f"Found emergency medicine specialist: {specialty}")
+                            break
+                    
+                    # Additional relevant specialties
+                    relevant_specialties = [
+                        "general internal medicine",
+                        "general medical practitioner"
+                    ]
+                    
+                    for specialty in relevant_specialties:
+                        if specialty in result_text:
+                            score += 25  # Moderate bonus for relevant specialties
+                            break
+                    
                     # Penalty for additional names (indicating different person)
                     name_words = result_text.split()
                     name_count = sum(1 for word in name_words if len(word) > 2 and word.isalpha())
                     if name_count > 3:  # More than first, last, and one middle name
                         score -= 5
                     
-                    logger.info(f"Result {i}: score={score}, text preview: '{result_text[:100]}'")
+                    logger.info(f"Result {i}: score={score}, text: '{result_text[:200]}'")
                     
                     if score > best_score:
                         best_score = score
@@ -608,7 +769,7 @@ class SeleniumMedRegScraper:
                     logger.error(f"Error scoring result {i}: {e}")
                     continue
             
-            if best_match and best_score > 5:  # Minimum threshold
+            if best_match and best_score > 10:  # Increased minimum threshold
                 logger.info(f"Selected result with score {best_score}")
                 return best_match
             else:
@@ -701,14 +862,26 @@ class SeleniumMedRegScraper:
                     try:
                         # Scroll to element
                         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", best_match)
-                        time.sleep(0.5)
+                        
+                        # Wait for element to be clickable
+                        self.wait.until(EC.element_to_be_clickable(best_match))
                         
                         # Try the click
                         click_method()
                         logger.info(f"Successfully clicked on best match using {method_name}")
                         
-                        # Wait for detail page to load
-                        time.sleep(3)
+                        # Wait for detail page to load by checking for URL change or content
+                        try:
+                            self.wait.until(
+                                EC.any_of(
+                                    lambda driver: driver.current_url != self.search_url,
+                                    EC.presence_of_element_located((By.CSS_SELECTOR, "[data-testid='person-detail']")),
+                                    EC.presence_of_element_located((By.CSS_SELECTOR, ".person-details"))
+                                )
+                            )
+                        except TimeoutException:
+                            # Fallback to short wait if specific elements not found
+                            time.sleep(1)
                         
                         # Check if we navigated to a detail page
                         current_url = self.driver.current_url
