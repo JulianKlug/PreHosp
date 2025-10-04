@@ -1,0 +1,8 @@
+{
+  "num_cases": 7185,
+  "success_rate": 0.38079331941544886,
+  "fentanyl_usage_rate": 0.7667362560890745,
+  "ketamine_usage_rate": 0.18329853862212944,
+  "reward_column": "reward",
+  "num_actions": 25
+}

@@ -1,0 +1,12 @@
+{
+  "train_auc": 0.9288512603118788,
+  "observed_success_rate": 0.38065414057063324,
+  "expected_policy_value": 0.6431107993130427,
+  "matched_coverage": 0.029923451635351428,
+  "matched_cases": 43.0,
+  "matched_success_rate": 0.5116279069767442,
+  "best_historical_action": 18.0,
+  "best_historical_success_rate": 1.0,
+  "best_historical_support": 1.0,
+  "test_auc_logged_actions": 0.6486093708275991
+}
