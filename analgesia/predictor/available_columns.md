@@ -8,6 +8,7 @@ Target: VAS_on_arrival < 3
 
 Target population: primary missions of adult trauma patients that start with a VAS > 3 
 data_df = data_df[data_df["VAS_on_scene"] > 3]
+data_df = data_df.drop_duplicates(subset=["SNZ Ereignis Nr. "])
 
 if restrict_to_trauma:
     n_non_trauma = data_df[data_df['Einteilung (reduziert)'] != 'Unfall'].shape[0]

@@ -19,6 +19,7 @@ from .train_predictor import (
     load_filtered_dataset,
     tidy_location_features,
     detect_feature_roles,
+    apply_feature_modifications,
 )
 
 sns.set_theme(style="whitegrid")
@@ -344,6 +345,7 @@ def main() -> None:
         args.reference_year,
     )
     features = tidy_location_features(features)
+    features = apply_feature_modifications(features)
     roles = detect_feature_roles(features.copy())
     features_model = features.copy()
     roles = drop_low_information_columns(features_model, roles)

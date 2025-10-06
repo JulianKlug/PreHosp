@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence, Tuple
@@ -185,6 +186,14 @@ def load_filtered_dataset(
 ) -> Tuple[pd.DataFrame, pd.Series, Dict[str, int]]:
     logging.info("Loading dataset from %s", data_path)
     df = pd.read_excel(data_path, sheet_name="Grid")
+
+    duplicate_key = "SNZ Ereignis Nr. "
+    if duplicate_key in df.columns:
+        original_size = len(df)
+        df = df.drop_duplicates(subset=[duplicate_key])
+        removed = original_size - len(df)
+        if removed:
+            logging.info("Dropped %s duplicate missions based on '%s'", removed, duplicate_key)
     feature_columns, missing = parse_allowed_columns(allowed_columns_path, df.columns)
     if missing:
         logging.warning("The following allowed columns were not found in the dataset: %s", ", ".join(missing))
@@ -200,6 +209,17 @@ def load_filtered_dataset(
         & (df["Alter "] >= 16)
         & df["VAS_on_arrival"].notna()
     ].copy()
+
+    if duplicate_key in filtered.columns:
+        filtered_before = len(filtered)
+        filtered = filtered.drop_duplicates(subset=[duplicate_key]).copy()
+        filtered_removed = filtered_before - len(filtered)
+        if filtered_removed:
+            logging.info(
+                "Removed %s duplicate missions from filtered cohort using '%s'",
+                filtered_removed,
+                duplicate_key,
+            )
 
     logging.info("Filtered cohort size: %s rows", len(filtered))
 
@@ -310,6 +330,244 @@ def tidy_location_features(features: pd.DataFrame) -> pd.DataFrame:
     drop_cols = [col for col in ["PLZ4", "Strassennummer", "Gemeinde"] if col in features.columns]
     if drop_cols:
         features = features.drop(columns=drop_cols)
+
+    return features
+
+
+def _coalesce_numeric_columns(
+    features: pd.DataFrame, new_name: str, candidates: Sequence[str]
+) -> pd.DataFrame:
+    available = [column for column in candidates if column in features.columns]
+    if not available:
+        return features
+
+    combined: pd.Series | None = None
+    for column in available:
+        series = pd.to_numeric(features[column], errors="coerce")
+        if combined is None:
+            combined = series
+        else:
+            combined = combined.combine_first(series)
+
+    if combined is None:
+        return features
+
+    features[new_name] = combined
+    for column in available:
+        if column != new_name and column in features.columns:
+            features.drop(columns=column, inplace=True)
+    return features
+
+
+def _normalize_multilabel_text(series: pd.Series) -> pd.Series:
+    splitter = re.compile(r"[;,/\\n]+")
+
+    def normalize_entry(value: object) -> str | float:
+        if value is None or pd.isna(value):
+            return np.nan
+        text = str(value).strip()
+        if not text:
+            return np.nan
+        tokens = [token.strip() for token in splitter.split(text) if token.strip()]
+        if not tokens:
+            return np.nan
+        unique_tokens: List[str] = []
+        seen_lower: set[str] = set()
+        for token in tokens:
+            lowered = token.lower()
+            if lowered not in seen_lower:
+                unique_tokens.append(token)
+                seen_lower.add(lowered)
+        return "; ".join(unique_tokens)
+
+    normalized = series.apply(normalize_entry)
+    return normalized
+
+
+def _join_unique_tokens(tokens: Iterable[str]) -> str | float:
+    unique_tokens: List[str] = []
+    seen_lower: set[str] = set()
+    for token in tokens:
+        cleaned = str(token).strip()
+        if not cleaned or cleaned == "-" or cleaned == "--:--:--":
+            continue
+        lowered = cleaned.lower()
+        if lowered not in seen_lower:
+            unique_tokens.append(cleaned)
+            seen_lower.add(lowered)
+    if not unique_tokens:
+        return np.nan
+    return "; ".join(unique_tokens)
+
+
+def _extract_venous_access_features(series: pd.Series) -> pd.DataFrame:
+    splitter = re.compile(r"[;\n]+")
+
+    counts: List[int] = []
+    types: List[str | float] = []
+    locations: List[str | float] = []
+    sides: List[str | float] = []
+    sizes: List[str | float] = []
+    preexisting: List[str | float] = []
+    inserted_by: List[str | float] = []
+
+    for value in series:
+        if value is None or pd.isna(value):
+            counts.append(0)
+            types.append(np.nan)
+            locations.append(np.nan)
+            sides.append(np.nan)
+            sizes.append(np.nan)
+            preexisting.append(np.nan)
+            inserted_by.append(np.nan)
+            continue
+
+        text = str(value).strip()
+        if not text or text == "-":
+            counts.append(0)
+            types.append(np.nan)
+            locations.append(np.nan)
+            sides.append(np.nan)
+            sizes.append(np.nan)
+            preexisting.append(np.nan)
+            inserted_by.append(np.nan)
+            continue
+
+        access_entries = [entry.strip() for entry in splitter.split(text) if entry.strip()]
+        parsed_entries: List[List[str]] = []
+        for entry in access_entries:
+            parts = [part.strip() for part in entry.split(",")]
+            if not any(parts):
+                continue
+            while len(parts) < 7:
+                parts.append("")
+            parsed_entries.append(parts[:7])
+
+        counts.append(len(parsed_entries))
+        if not parsed_entries:
+            types.append(np.nan)
+            locations.append(np.nan)
+            sides.append(np.nan)
+            sizes.append(np.nan)
+            preexisting.append(np.nan)
+            inserted_by.append(np.nan)
+            continue
+
+        type_tokens = [parts[0] for parts in parsed_entries if len(parts) > 0]
+        location_tokens = [parts[1] for parts in parsed_entries if len(parts) > 1]
+        side_tokens = [parts[2] for parts in parsed_entries if len(parts) > 2]
+        size_tokens = [parts[3] for parts in parsed_entries if len(parts) > 3]
+        preexisting_tokens = [parts[4] for parts in parsed_entries if len(parts) > 4]
+        inserted_by_tokens = [parts[5] for parts in parsed_entries if len(parts) > 5]
+
+        types.append(_join_unique_tokens(type_tokens))
+        locations.append(_join_unique_tokens(location_tokens))
+        sides.append(_join_unique_tokens(side_tokens))
+        sizes.append(_join_unique_tokens(size_tokens))
+        preexisting.append(_join_unique_tokens(preexisting_tokens))
+        inserted_by.append(_join_unique_tokens(inserted_by_tokens))
+
+    return pd.DataFrame(
+        {
+            "venous_access_count": counts,
+            "venous_access_types": types,
+            "venous_access_locations": locations,
+            "venous_access_sides": sides,
+            "venous_access_sizes": sizes,
+            "venous_access_preexisting": preexisting,
+            "venous_access_inserted_by": inserted_by,
+        },
+        index=series.index,
+    )
+
+
+def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
+    features = features.copy()
+
+    features = _coalesce_numeric_columns(
+        features,
+        "heart_rate",
+        (
+            "heart_rate",
+            "HF",
+            "HF ",
+            "HR",
+        ),
+    )
+
+    features = _coalesce_numeric_columns(
+        features,
+        "diastolic",
+        (
+            "diastolic",
+            "IBD Diastolisch ",
+            "IBD Diastolisch",
+            "IBDDiastolisch",
+            "NIBD Diastolisch",
+            "NIBD Diastolisch ",
+            "NIBD Diastolisch10",
+        ),
+    )
+
+    features = _coalesce_numeric_columns(
+        features,
+        "systolic",
+        (
+            "systolic",
+            "IBD Systolisch ",
+            "IBD Systolisch",
+            "NIBD Systolisch",
+            "NIBD Systolisch ",
+        ),
+    )
+
+    features = _coalesce_numeric_columns(
+        features,
+        "naca",
+        (
+            "naca",
+            "NACA (nummerisch)",
+            "NACA",
+        ),
+    )
+
+    if "Weitere Massnahmen" in features.columns:
+        features["Weitere Massnahmen"] = _normalize_multilabel_text(features["Weitere Massnahmen"])
+
+    if "Zugänge" in features.columns:
+        access_features = _extract_venous_access_features(features["Zugänge"])
+        features = features.drop(columns=["Zugänge"]).join(access_features)
+
+    drop_columns = [
+        "Detail",
+        "ICD-Code der Hauptdiagnose",
+        "Alle ICD-Codes",
+        "Institution",
+        "Kategorie (reduziert)",
+        "Ort3",
+        "Strasse",
+        "Sauerstoffabgaben",
+        "Sprache",
+        "Weitere Diagnosen",
+        "Zeitpunkt, Messart, Wert",
+        "Zeitpunkt",
+        "Messart",
+        "Wert",
+        "(Be)-Atmung / Beatmung / Befund Atmung",
+        "(Be)-Atmung",
+        "Beatmung",
+        "Befund Atmung",
+        "Auffälligkeiten",
+        "Arme",
+        "Ereignisort2",
+        "PLZ",
+        "PLZ4",
+    ]
+
+    existing_drop_columns = [column for column in drop_columns if column in features.columns]
+    if existing_drop_columns:
+        features = features.drop(columns=existing_drop_columns)
+        logging.info("Dropped %s columns per feature modifications", len(existing_drop_columns))
 
     return features
 
@@ -728,6 +986,7 @@ def main() -> None:
         args.reference_year,
     )
     features = tidy_location_features(features)
+    features = apply_feature_modifications(features)
 
     if args.feature_whitelist:
         whitelist_raw = [line for line in args.feature_whitelist.read_text(encoding="utf-8").splitlines() if line.strip()]
