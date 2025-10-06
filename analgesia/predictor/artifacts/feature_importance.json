@@ -3,351 +3,351 @@
     "top_positive": [
       {
         "feature": "Bergungen_Halskragen ; Rettungsbrett; Beckengurt",
-        "coefficient": 1.4858976445005816
+        "coefficient": 1.4901576305181834
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Normokard; Unauff\u00e4llig ",
-        "coefficient": 1.0548788956124544
+        "coefficient": 1.050117763933112
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
-        "coefficient": 1.0425488011381392
-      },
-      {
-        "feature": "Ereignisort__andermatt",
-        "coefficient": 1.015601125143892
+        "coefficient": 1.0479195513472501
       },
       {
         "feature": "Auff\u00e4lligkeiten_Paraplegie",
-        "coefficient": 1.0120670815930153
+        "coefficient": 1.0156750584732501
       },
       {
         "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma LWS Unfall; Fraktur Unfall; Kontusion/Distorsion Unfall",
-        "coefficient": 1.0083069891964564
+        "coefficient": 1.0121465196507393
+      },
+      {
+        "feature": "Ereignisort__andermatt",
+        "coefficient": 1.0097337680905019
       },
       {
         "feature": "Bergungen_Angest\u00fctzt Einladen",
-        "coefficient": 0.9870954316657666
+        "coefficient": 0.9922799546228404
       },
       {
         "feature": "Bergungen_Winde Bergedreieck; KED",
-        "coefficient": 0.9709964105668668
+        "coefficient": 0.9734758353818795
       },
       {
         "feature": "Sauerstoffabgaben_Sonde/Brille 4l/min (12:10:54)",
-        "coefficient": 0.9679821670227352
-      },
-      {
-        "feature": "K\u00f6rperregion_Thorax",
-        "coefficient": 0.9593398340126262
+        "coefficient": 0.970847291161193
       },
       {
         "feature": "Sauerstoffabgaben_Sonde/Brille 3l/min (12:23:18)",
-        "coefficient": 0.9590833542777532
+        "coefficient": 0.9629507038649272
+      },
+      {
+        "feature": "K\u00f6rperregion_Thorax",
+        "coefficient": 0.960786031307465
       },
       {
         "feature": "Sauerstoffabgaben_O2 Maske mit Reservoir  10l/min (15:48:13)",
-        "coefficient": 0.9443881830058896
+        "coefficient": 0.9452778450835928
       },
       {
         "feature": "doctor_sex_female",
-        "coefficient": 0.9328114177503388
+        "coefficient": 0.9318762160800852
       },
       {
         "feature": "doctor_specialist_qualifications_Surgery",
-        "coefficient": 0.9291528173515383
-      },
-      {
-        "feature": "Bergungen_Winde Bergedreieck; Halskragen ",
-        "coefficient": 0.9231115535873334
+        "coefficient": 0.9226010750441649
       },
       {
         "feature": "doctor_specialist_qualifications_Child and adolescent psychiatry and psychotherapy",
-        "coefficient": 0.9187720473098893
+        "coefficient": 0.922027572689169
+      },
+      {
+        "feature": "Bergungen_Winde Bergedreieck; Halskragen ",
+        "coefficient": 0.9218569255400768
       },
       {
         "feature": "Bergungen_KED; Halskragen ; Vakuummatratze; Beckengurt",
-        "coefficient": 0.9170999279385572
+        "coefficient": 0.9200209863297655
       },
       {
         "feature": "Bergungen_Halskragen ; Vakuummatratze; Winde Bergedreieck; Beckengurt",
-        "coefficient": 0.9105483166273538
+        "coefficient": 0.9137669990976923
       },
       {
         "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma HWS Unfall; Wirbels\u00e4ulentrauma LWS Unfall",
-        "coefficient": 0.9002675507341368
+        "coefficient": 0.900384686721833
       },
       {
         "feature": "Weitere Massnahmen_Sonographie",
-        "coefficient": 0.8965841958180337
+        "coefficient": 0.9002888105300438
       }
     ],
     "top_negative": [
       {
         "feature": "doctor_sex_unknown",
-        "coefficient": -1.8637332501301929
+        "coefficient": -1.8590147403315243
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
-        "coefficient": -1.7751121519131077
+        "coefficient": -1.7770078370215598
       },
       {
         "feature": "doctor_specialist_qualifications_Anaesthesiology; Intensive care medicine",
-        "coefficient": -1.3117877721719036
+        "coefficient": -1.310815738694878
       },
       {
         "feature": "Befund Atmung_Unauff\u00e4llige Spontanatmung",
-        "coefficient": -1.2008264274454359
+        "coefficient": -1.1969422972137125
       },
       {
         "feature": "doctor_specialist_qualifications_General Internal Medicine; Anaesthesiology",
-        "coefficient": -1.1872248671170822
+        "coefficient": -1.1817124398662437
       },
       {
         "feature": "Lagerungen_Oberk\u00f6rper erh\u00f6ht; R\u00fcckenlagerung",
-        "coefficient": -1.1321123345605497
+        "coefficient": -1.1321712163066853
       },
       {
         "feature": "Bergungen_Schaufeltrage; Vakuummatratze",
-        "coefficient": -1.1297394704648034
+        "coefficient": -1.1246489979218783
       },
       {
         "feature": "Lebensbedrohliche Blutung_Obere Extremit\u00e4t Links, Obere Extremit\u00e4t Rechts",
-        "coefficient": -1.1084427810191937
+        "coefficient": -1.1071023519805177
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Unauff\u00e4llig ",
-        "coefficient": -1.0777520987460676
+        "coefficient": -1.0805390126522325
       },
       {
         "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper erh\u00f6ht",
-        "coefficient": -1.0600746046222418
+        "coefficient": -1.0597776230575715
       },
       {
         "feature": "Alle ICD-Codes_S70V (HD)",
-        "coefficient": -1.0377301696619232
+        "coefficient": -1.03995460219762
       },
       {
         "feature": "Weitere Massnahmen_Rettungsdecke; W\u00e4rmebeutel",
-        "coefficient": -1.0344173561432122
+        "coefficient": -1.0350092661423218
       },
       {
         "feature": "Bergungen_Periphiale Fixation; Winde Bergedreieck",
-        "coefficient": -0.9803462168227027
+        "coefficient": -0.9765893048349257
       },
       {
         "feature": "Bergungen_Winde Horizontalnetz; Vakuummatratze",
-        "coefficient": -0.9797876527843117
+        "coefficient": -0.9735273669132154
       },
       {
         "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma HWS Unfall",
-        "coefficient": -0.9024567036195639
+        "coefficient": -0.904746317686106
       },
       {
         "feature": "Aktuelles Ereignis_Erdr\u00fccken/Einklemmen",
-        "coefficient": -0.8990617550570874
+        "coefficient": -0.9041644180441011
       },
       {
         "feature": "Weitere Massnahmen_Reposition; Thermoflect Decke",
-        "coefficient": -0.8835729619291726
+        "coefficient": -0.8807744853648882
       },
       {
         "feature": "Bergungen_Vakuummatratze; Sam Splint",
-        "coefficient": -0.8730926511805038
+        "coefficient": -0.8701773821415916
       },
       {
         "feature": "Weitere Diagnosen_Fraktur Unfall; Fraktur Unfall",
-        "coefficient": -0.8570872125964828
+        "coefficient": -0.8542369549773484
       },
       {
         "feature": "Bewusstseinlage_Verwirrt",
-        "coefficient": -0.8495445880359578
+        "coefficient": -0.8540515625156104
       }
     ],
     "top_magnitude": [
       {
         "feature": "doctor_sex_unknown",
-        "coefficient": -1.8637332501301929,
-        "abs_coefficient": 1.8637332501301929
+        "coefficient": -1.8590147403315243,
+        "abs_coefficient": 1.8590147403315243
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
-        "coefficient": -1.7751121519131077,
-        "abs_coefficient": 1.7751121519131077
+        "coefficient": -1.7770078370215598,
+        "abs_coefficient": 1.7770078370215598
       },
       {
         "feature": "Bergungen_Halskragen ; Rettungsbrett; Beckengurt",
-        "coefficient": 1.4858976445005816,
-        "abs_coefficient": 1.4858976445005816
+        "coefficient": 1.4901576305181834,
+        "abs_coefficient": 1.4901576305181834
       },
       {
         "feature": "doctor_specialist_qualifications_Anaesthesiology; Intensive care medicine",
-        "coefficient": -1.3117877721719036,
-        "abs_coefficient": 1.3117877721719036
+        "coefficient": -1.310815738694878,
+        "abs_coefficient": 1.310815738694878
       },
       {
         "feature": "Befund Atmung_Unauff\u00e4llige Spontanatmung",
-        "coefficient": -1.2008264274454359,
-        "abs_coefficient": 1.2008264274454359
+        "coefficient": -1.1969422972137125,
+        "abs_coefficient": 1.1969422972137125
       },
       {
         "feature": "doctor_specialist_qualifications_General Internal Medicine; Anaesthesiology",
-        "coefficient": -1.1872248671170822,
-        "abs_coefficient": 1.1872248671170822
+        "coefficient": -1.1817124398662437,
+        "abs_coefficient": 1.1817124398662437
       },
       {
         "feature": "Lagerungen_Oberk\u00f6rper erh\u00f6ht; R\u00fcckenlagerung",
-        "coefficient": -1.1321123345605497,
-        "abs_coefficient": 1.1321123345605497
+        "coefficient": -1.1321712163066853,
+        "abs_coefficient": 1.1321712163066853
       },
       {
         "feature": "Bergungen_Schaufeltrage; Vakuummatratze",
-        "coefficient": -1.1297394704648034,
-        "abs_coefficient": 1.1297394704648034
+        "coefficient": -1.1246489979218783,
+        "abs_coefficient": 1.1246489979218783
       },
       {
         "feature": "Lebensbedrohliche Blutung_Obere Extremit\u00e4t Links, Obere Extremit\u00e4t Rechts",
-        "coefficient": -1.1084427810191937,
-        "abs_coefficient": 1.1084427810191937
+        "coefficient": -1.1071023519805177,
+        "abs_coefficient": 1.1071023519805177
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Unauff\u00e4llig ",
-        "coefficient": -1.0777520987460676,
-        "abs_coefficient": 1.0777520987460676
+        "coefficient": -1.0805390126522325,
+        "abs_coefficient": 1.0805390126522325
       },
       {
         "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper erh\u00f6ht",
-        "coefficient": -1.0600746046222418,
-        "abs_coefficient": 1.0600746046222418
+        "coefficient": -1.0597776230575715,
+        "abs_coefficient": 1.0597776230575715
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Normokard; Unauff\u00e4llig ",
-        "coefficient": 1.0548788956124544,
-        "abs_coefficient": 1.0548788956124544
+        "coefficient": 1.050117763933112,
+        "abs_coefficient": 1.050117763933112
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
-        "coefficient": 1.0425488011381392,
-        "abs_coefficient": 1.0425488011381392
+        "coefficient": 1.0479195513472501,
+        "abs_coefficient": 1.0479195513472501
       },
       {
         "feature": "Alle ICD-Codes_S70V (HD)",
-        "coefficient": -1.0377301696619232,
-        "abs_coefficient": 1.0377301696619232
+        "coefficient": -1.03995460219762,
+        "abs_coefficient": 1.03995460219762
       },
       {
         "feature": "Weitere Massnahmen_Rettungsdecke; W\u00e4rmebeutel",
-        "coefficient": -1.0344173561432122,
-        "abs_coefficient": 1.0344173561432122
-      },
-      {
-        "feature": "Ereignisort__andermatt",
-        "coefficient": 1.015601125143892,
-        "abs_coefficient": 1.015601125143892
+        "coefficient": -1.0350092661423218,
+        "abs_coefficient": 1.0350092661423218
       },
       {
         "feature": "Auff\u00e4lligkeiten_Paraplegie",
-        "coefficient": 1.0120670815930153,
-        "abs_coefficient": 1.0120670815930153
+        "coefficient": 1.0156750584732501,
+        "abs_coefficient": 1.0156750584732501
       },
       {
         "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma LWS Unfall; Fraktur Unfall; Kontusion/Distorsion Unfall",
-        "coefficient": 1.0083069891964564,
-        "abs_coefficient": 1.0083069891964564
+        "coefficient": 1.0121465196507393,
+        "abs_coefficient": 1.0121465196507393
+      },
+      {
+        "feature": "Ereignisort__andermatt",
+        "coefficient": 1.0097337680905019,
+        "abs_coefficient": 1.0097337680905019
       },
       {
         "feature": "Bergungen_Angest\u00fctzt Einladen",
-        "coefficient": 0.9870954316657666,
-        "abs_coefficient": 0.9870954316657666
+        "coefficient": 0.9922799546228404,
+        "abs_coefficient": 0.9922799546228404
       },
       {
         "feature": "Bergungen_Periphiale Fixation; Winde Bergedreieck",
-        "coefficient": -0.9803462168227027,
-        "abs_coefficient": 0.9803462168227027
+        "coefficient": -0.9765893048349257,
+        "abs_coefficient": 0.9765893048349257
       }
     ]
   },
   "xgboost": {
     "importance": [
       {
-        "feature": "Zug\u00e4nge__flugarzt/flug\u00e4rztin",
-        "importance": 0.009767305105924606
-      },
-      {
-        "feature": "VAS_on_scene",
-        "importance": 0.009358994662761688
-      },
-      {
-        "feature": "Zug\u00e4nge__peripher-ven\u00f6s",
-        "importance": 0.008603633381426334
-      },
-      {
-        "feature": "EKG 3-Kanal_Nein",
-        "importance": 0.00805431418120861
+        "feature": "Ort_Unteriberg",
+        "importance": 0.010981900617480278
       },
       {
         "feature": "doctor_sex_unknown",
-        "importance": 0.007952811196446419
+        "importance": 0.010056235827505589
       },
       {
-        "feature": "K\u00f6rperregion_obere Extremit\u00e4t",
-        "importance": 0.007656296715140343
-      },
-      {
-        "feature": "Weitere Massnahmen_Thermoflect Decke; W\u00e4rmebeutel",
-        "importance": 0.007048121653497219
-      },
-      {
-        "feature": "Zug\u00e4nge__-",
-        "importance": 0.006760172080248594
+        "feature": "Zug\u00e4nge__flugarzt/flug\u00e4rztin",
+        "importance": 0.008783882483839989
       },
       {
         "feature": "ICD-Code der Hauptdiagnose_S62V",
-        "importance": 0.006279611028730869
+        "importance": 0.00845431350171566
       },
       {
-        "feature": "Weitere Massnahmen_Keine",
-        "importance": 0.006202803924679756
+        "feature": "Zug\u00e4nge__-",
+        "importance": 0.007915573194622993
       },
       {
-        "feature": "Alle ICD-Codes_S32V (HD)",
-        "importance": 0.006033949088305235
+        "feature": "VAS_on_scene",
+        "importance": 0.007887294515967369
       },
       {
-        "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
-        "importance": 0.005939841736108065
+        "feature": "Zug\u00e4nge__g16",
+        "importance": 0.007786886300891638
       },
       {
-        "feature": "Herzrhytmusst\u00f6rungen_Normokard; Sinusrhythmus",
-        "importance": 0.005735831335186958
+        "feature": "ICD-Code der Hauptdiagnose_S72V, S72V",
+        "importance": 0.007130885496735573
+      },
+      {
+        "feature": "EKG 3-Kanal_Nein",
+        "importance": 0.006992597598582506
+      },
+      {
+        "feature": "K\u00f6rperregion_obere Extremit\u00e4t",
+        "importance": 0.0069900196976959705
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_S39V",
+        "importance": 0.006623204797506332
       },
       {
         "feature": "Befund Atmung_Unauff\u00e4llige Spontanatmung",
-        "importance": 0.005675627384334803
+        "importance": 0.006499775219708681
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Normokard",
-        "importance": 0.0054479194805026054
+        "importance": 0.006457439158111811
       },
       {
-        "feature": "Monat_November",
-        "importance": 0.005386797245591879
+        "feature": "doctor_specialist_qualifications_Anaesthesiology, \nIntensive care medicine",
+        "importance": 0.006404407322406769
       },
       {
-        "feature": "ICD-Code der Hauptdiagnose_S83V",
-        "importance": 0.0052841766737401485
+        "feature": "Zug\u00e4nge__peripher-ven\u00f6s",
+        "importance": 0.006400763988494873
       },
       {
-        "feature": "Monat_April",
-        "importance": 0.00524465786293149
+        "feature": "doctor_specialist_qualifications_",
+        "importance": 0.006159826647490263
+      },
+      {
+        "feature": "Ist ven\u00f6s bestehend_Nein",
+        "importance": 0.005971984472125769
+      },
+      {
+        "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
+        "importance": 0.005953268613666296
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
-        "importance": 0.005226576700806618
+        "importance": 0.005903755314648151
       },
       {
-        "feature": "Befund_Normoton",
-        "importance": 0.005117671564221382
+        "feature": "K\u00f6rperregion_Wirbels\u00e4ule",
+        "importance": 0.005521003622561693
       }
     ]
   }

@@ -31,10 +31,17 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_split
+from sklearn.model_selection import (
+    RandomizedSearchCV,
+    StratifiedKFold,
+    cross_validate,
+    train_test_split,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from xgboost import XGBClassifier
+
+from scipy.stats import loguniform, randint, uniform
 
 from .transformers import MultiLabelTopKEncoder
 
@@ -107,6 +114,29 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=0.2,
         help="Proportion of the training fold reserved for validation",
+    )
+    parser.add_argument(
+        "--tune-xgb",
+        action="store_true",
+        help="Run randomized hyperparameter search for the XGBoost model",
+    )
+    parser.add_argument(
+        "--xgb-tuning-iterations",
+        type=int,
+        default=40,
+        help="Number of parameter configurations sampled during XGBoost tuning",
+    )
+    parser.add_argument(
+        "--xgb-tuning-scoring",
+        type=str,
+        default="average_precision",
+        help="Scikit-learn scoring metric used during XGBoost tuning",
+    )
+    parser.add_argument(
+        "--feature-whitelist",
+        type=Path,
+        default=None,
+        help="Optional newline-delimited file listing raw feature columns to retain",
     )
     parser.add_argument(
         "--n-splits",
@@ -352,8 +382,10 @@ def drop_low_information_columns(features: pd.DataFrame, roles: FeatureRoles) ->
 
 
 def format_mean_sd(series: pd.Series) -> str:
+    if series is None or not hasattr(series, "to_numpy"):
+        return "NA"
     numeric_series = pd.to_numeric(series, errors="coerce")
-    if numeric_series.notna().sum() == 0:
+    if getattr(numeric_series, "notna", None) is None or numeric_series.notna().sum() == 0:
         return "NA"
     mean = numeric_series.mean()
     std = numeric_series.std()
@@ -399,6 +431,80 @@ def dataframe_to_markdown(df: pd.DataFrame) -> str:
     for _, row in df.iterrows():
         lines.append("| " + " | ".join(str(row[col]) for col in headers) + " |")
     return "\n".join(lines)
+
+
+def compute_raw_feature_scores(
+    pipeline: Pipeline,
+    available_columns: set[str],
+    model_type: str,
+) -> Dict[str, float]:
+    preprocessor: ColumnTransformer = pipeline.named_steps["preprocessor"]
+    model = pipeline.named_steps["model"]
+    feature_names = get_preprocessed_feature_names(preprocessor)
+
+    if model_type == "logistic" and hasattr(model, "coef_"):
+        values = np.abs(model.coef_[0])
+    elif model_type == "xgboost" and hasattr(model, "feature_importances_"):
+        values = model.feature_importances_
+    else:
+        return {}
+
+    scores: Dict[str, float] = {}
+    for name, value in zip(feature_names, values):
+        if value == 0:
+            continue
+        parts = name.split("__", 1)
+        raw_name = parts[1] if len(parts) > 1 else parts[0]
+        if raw_name not in available_columns and "_" in raw_name:
+            candidate = raw_name.split("_")[0]
+            if candidate in available_columns:
+                raw_name = candidate
+        if raw_name not in available_columns:
+            continue
+        scores[raw_name] = scores.get(raw_name, 0.0) + float(value)
+    return scores
+
+
+def tune_xgb_hyperparameters(
+    pipeline: Pipeline,
+    X: pd.DataFrame,
+    y: pd.Series,
+    random_state: int,
+    n_iter: int,
+    scoring: str,
+) -> Tuple[Pipeline, Dict[str, object]]:
+    param_distributions = {
+        "model__n_estimators": randint(320, 560),
+        "model__learning_rate": loguniform(0.02, 0.12),
+        "model__max_depth": randint(3, 7),
+        "model__min_child_weight": loguniform(1.0, 4.0),
+        "model__subsample": uniform(0.65, 0.25),
+        "model__colsample_bytree": uniform(0.5, 0.3),
+        "model__gamma": loguniform(1e-4, 1.0),
+        "model__reg_lambda": loguniform(0.5, 5.0),
+        "model__reg_alpha": loguniform(1e-4, 0.5),
+    }
+
+    search = RandomizedSearchCV(
+        pipeline,
+        param_distributions=param_distributions,
+        n_iter=n_iter,
+        scoring=scoring,
+        cv=3,
+        n_jobs=1,
+        random_state=random_state,
+        verbose=1,
+        refit=True,
+    )
+
+    search.fit(X, y)
+
+    tuned_pipeline: Pipeline = search.best_estimator_
+    tuning_summary = {
+        "best_score": float(search.best_score_),
+        "best_params": search.best_params_,
+    }
+    return tuned_pipeline, tuning_summary
 
 
 def get_preprocessed_feature_names(preprocessor: ColumnTransformer) -> np.ndarray:
@@ -623,6 +729,26 @@ def main() -> None:
     )
     features = tidy_location_features(features)
 
+    if args.feature_whitelist:
+        whitelist_raw = [line for line in args.feature_whitelist.read_text(encoding="utf-8").splitlines() if line.strip()]
+        normalized_map = {col: col for col in features.columns}
+        normalized_map.update({col.strip(): col for col in features.columns})
+
+        selected_columns: List[str] = []
+        missing = []
+        for entry in whitelist_raw:
+            actual = normalized_map.get(entry)
+            if actual and actual not in selected_columns:
+                selected_columns.append(actual)
+            else:
+                missing.append(entry)
+
+        if not selected_columns:
+            raise ValueError("Feature whitelist does not match any available columns.")
+        if missing:
+            logging.warning("Whitelist columns not present and will be skipped: %s", ", ".join(sorted(set(missing))))
+        features = features[selected_columns]
+
     roles = detect_feature_roles(features.copy())
     features_model = features.copy()
     roles = drop_low_information_columns(features_model, roles)
@@ -653,14 +779,59 @@ def main() -> None:
 
     logging.info("Training logistic regression baseline")
     logistic_pipeline.fit(X_train, y_train)
-    logging.info("Training XGBoost classifier")
-    xgb_pipeline.fit(X_train, y_train)
+
+    # Fit baseline XGBoost to establish reference performance
+    baseline_xgb_pipeline = make_xgboost_pipeline(build_preprocessor(roles, args.multilabel_top_k), scale_pos_weight, args.random_state)
+    logging.info("Training baseline XGBoost classifier")
+    baseline_xgb_pipeline.fit(X_train, y_train)
+    baseline_val_metrics = evaluate_pipeline(baseline_xgb_pipeline, X_val, y_val)
+
+    tuned_pipeline = baseline_xgb_pipeline
+    xgb_tuning_summary: Dict[str, object | None] = {
+        "enabled": args.tune_xgb,
+        "accepted": False,
+        "baseline_score": float(baseline_val_metrics.get(args.xgb_tuning_scoring, baseline_val_metrics["pr_auc"])),
+        "best_score": None,
+        "best_params": None,
+        "scoring": args.xgb_tuning_scoring,
+        "iterations": args.xgb_tuning_iterations if args.tune_xgb else 0,
+    }
+
+    if args.tune_xgb:
+        logging.info("Running XGBoost hyperparameter tuning (%s iterations)", args.xgb_tuning_iterations)
+        candidate_pipeline, tuning_summary = tune_xgb_hyperparameters(
+            make_xgboost_pipeline(build_preprocessor(roles, args.multilabel_top_k), scale_pos_weight, args.random_state),
+            X_train,
+            y_train,
+            args.random_state,
+            args.xgb_tuning_iterations,
+            args.xgb_tuning_scoring,
+        )
+        candidate_val_metrics = evaluate_pipeline(candidate_pipeline, X_val, y_val)
+        tuned_score = candidate_val_metrics.get(args.xgb_tuning_scoring, candidate_val_metrics["pr_auc"])
+        baseline_score = baseline_val_metrics.get(args.xgb_tuning_scoring, baseline_val_metrics["pr_auc"])
+
+        xgb_tuning_summary.update(tuning_summary)
+        xgb_tuning_summary["candidate_validation_score"] = float(tuned_score)
+
+        if tuned_score >= baseline_score:
+            logging.info("Accepted tuned XGBoost parameters (validation %s: %.3f >= baseline %.3f)", args.xgb_tuning_scoring, tuned_score, baseline_score)
+            tuned_pipeline = candidate_pipeline
+            xgb_tuning_summary["accepted"] = True
+        else:
+            logging.info("Retaining baseline XGBoost parameters (validation %s: %.3f < baseline %.3f)", args.xgb_tuning_scoring, tuned_score, baseline_score)
+
+    xgb_pipeline = tuned_pipeline
 
     logging.info("Evaluating on validation and hold-out sets")
     logistic_val_metrics = evaluate_pipeline(logistic_pipeline, X_val, y_val)
     logistic_metrics = evaluate_pipeline(logistic_pipeline, X_test, y_test)
     xgb_val_metrics = evaluate_pipeline(xgb_pipeline, X_val, y_val)
     xgb_metrics = evaluate_pipeline(xgb_pipeline, X_test, y_test)
+
+    available_cols_set = set(features_model.columns)
+    logistic_raw_scores = compute_raw_feature_scores(logistic_pipeline, available_cols_set, "logistic")
+    xgb_raw_scores = compute_raw_feature_scores(xgb_pipeline, available_cols_set, "xgboost")
 
     logging.info("Running cross-validation for logistic regression")
     logistic_cv = run_cross_validation(logistic_pipeline, X_train, y_train, args.n_splits, args.random_state)
@@ -680,12 +851,15 @@ def main() -> None:
             "validation_metrics": logistic_val_metrics,
             "cross_validation": logistic_cv,
             "feature_contributions": extract_feature_contributions(logistic_pipeline),
+            "raw_feature_scores": logistic_raw_scores,
         },
         "xgboost": {
             "test_metrics": xgb_metrics,
             "validation_metrics": xgb_val_metrics,
             "cross_validation": xgb_cv,
             "feature_contributions": extract_feature_contributions(xgb_pipeline),
+            "tuning": xgb_tuning_summary,
+            "raw_feature_scores": xgb_raw_scores,
         },
     }
 

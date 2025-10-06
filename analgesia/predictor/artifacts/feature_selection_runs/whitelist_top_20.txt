@@ -1,0 +1,25 @@
+VAS_on_scene
+NACA (nummerisch)
+Alter 
+Geschlecht
+doctor_sex
+Bergungen
+ICD-Code der Hauptdiagnose
+Sauerstoffabgaben
+Alle ICD-Codes
+Weitere Diagnosen
+Herzrhytmusstörungen
+Weitere Massnahmen
+Monat
+Körperregion
+Lagerungen
+Hautbefund
+Aktuelles Ereignis
+Wochentag
+Zeitpunkt, Messart, Wert
+Atemgeräusche
+Befund Atmung
+psychischer Erstbefund
+Kategorie
+Einteilung
+Auffälligkeiten

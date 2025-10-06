@@ -1,0 +1,354 @@
+{
+  "logistic_regression": {
+    "top_positive": [
+      {
+        "feature": "Bergungen_Halskragen ; Rettungsbrett; Beckengurt",
+        "coefficient": 1.1737168034855618
+      },
+      {
+        "feature": "Bergungen_Angest\u00fctzt Einladen",
+        "coefficient": 1.1385312771718892
+      },
+      {
+        "feature": "Weitere Diagnosen_Abdominaltrauma als Verletzung Unfall; Kontusion/Distorsion Unfall",
+        "coefficient": 1.089446809294413
+      },
+      {
+        "feature": "Sauerstoffabgaben_O2 Maske mit Reservoir  8l/min",
+        "coefficient": 0.99238122158104
+      },
+      {
+        "feature": "doctor_sex_female",
+        "coefficient": 0.9845269348458697
+      },
+      {
+        "feature": "Sauerstoffabgaben_O2 Maske mit Reservoir  10l/min (15:48:13)",
+        "coefficient": 0.9606652268362756
+      },
+      {
+        "feature": "Alle ICD-Codes_S62V (HD)",
+        "coefficient": 0.9527659301783526
+      },
+      {
+        "feature": "Lagerungen_Sitzend; Sitzend (Heli-Sitz)",
+        "coefficient": 0.9398654688744058
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_T29V, T29V",
+        "coefficient": 0.9377334888716208
+      },
+      {
+        "feature": "Bergungen_Rettungsbrett; Vakuummatratze",
+        "coefficient": 0.9300942194455217
+      },
+      {
+        "feature": "K\u00f6rperregion_Thorax",
+        "coefficient": 0.9290094109561431
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Unauff\u00e4llig ; Normokard",
+        "coefficient": 0.9248575360122312
+      },
+      {
+        "feature": "Auff\u00e4lligkeiten_Paraplegie",
+        "coefficient": 0.9233345258086185
+      },
+      {
+        "feature": "Bergungen_Winde Bergedreieck; Halskragen ",
+        "coefficient": 0.914103041759793
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Normokard; Unauff\u00e4llig ",
+        "coefficient": 0.9132507723430802
+      },
+      {
+        "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma BWS Unfall; Kontusion/Distorsion Unfall",
+        "coefficient": 0.8922447150908476
+      },
+      {
+        "feature": "Bergungen_Winde Bergesack; Halskragen ; Vakuummatratze abgesaugt f\u00fcr Komfort",
+        "coefficient": 0.8920367065750537
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_S43V, S43V",
+        "coefficient": 0.8897042110923787
+      },
+      {
+        "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma LWS Unfall; Fraktur Unfall; Kontusion/Distorsion Unfall",
+        "coefficient": 0.8894296414220931
+      },
+      {
+        "feature": "Sauerstoffabgaben_Sonde/Brille 3l/min (15:45:11)",
+        "coefficient": 0.8713641643018757
+      }
+    ],
+    "top_negative": [
+      {
+        "feature": "doctor_sex_unknown",
+        "coefficient": -2.0169597880014356
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Unauff\u00e4llig ",
+        "coefficient": -1.3316848977386648
+      },
+      {
+        "feature": "Bergungen_Schaufeltrage; Vakuummatratze",
+        "coefficient": -1.073747517657964
+      },
+      {
+        "feature": "Lagerungen_Oberk\u00f6rper erh\u00f6ht; R\u00fcckenlagerung",
+        "coefficient": -1.0704712691920735
+      },
+      {
+        "feature": "Bergungen_Vakuummatratze; Sam Splint",
+        "coefficient": -1.0581286213351875
+      },
+      {
+        "feature": "Alle ICD-Codes_S70V (HD)",
+        "coefficient": -1.0357822829295464
+      },
+      {
+        "feature": "Weitere Diagnosen_Commotio cerebri Unfall; Fraktur Unfall",
+        "coefficient": -1.0327381845440273
+      },
+      {
+        "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma HWS Unfall",
+        "coefficient": -0.9790305158431474
+      },
+      {
+        "feature": "Weitere Diagnosen_Hyperventilation Krankheit",
+        "coefficient": -0.9491414855494938
+      },
+      {
+        "feature": "Weitere Massnahmen_Rettungsdecke; W\u00e4rmebeutel",
+        "coefficient": -0.9319800476170974
+      },
+      {
+        "feature": "Kategorie_Abdomen; Abdomen",
+        "coefficient": -0.9283189474319559
+      },
+      {
+        "feature": "K\u00f6rperregion_Wirbels\u00e4ule ",
+        "coefficient": -0.9245471134702749
+      },
+      {
+        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, Thorax",
+        "coefficient": -0.9186360281760645
+      },
+      {
+        "feature": "Bergungen_Beckengurt",
+        "coefficient": -0.8961868267605303
+      },
+      {
+        "feature": "Bergungen_Winde Horizontalnetz; Vakuummatratze",
+        "coefficient": -0.8685978987379961
+      },
+      {
+        "feature": "Weitere Diagnosen_Fraktur Unfall; Fraktur Unfall",
+        "coefficient": -0.8628032110623929
+      },
+      {
+        "feature": "Bergungen_Periphiale Fixation; Winde Bergedreieck",
+        "coefficient": -0.856121707700292
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_T12V",
+        "coefficient": -0.8163235426057761
+      },
+      {
+        "feature": "Aktuelles Ereignis_Verhangen/Verfangen (z.B. Seil, Baum)",
+        "coefficient": -0.8149606457527668
+      },
+      {
+        "feature": "Weitere Massnahmen_Infektionsschutz",
+        "coefficient": -0.8020383692437599
+      }
+    ],
+    "top_magnitude": [
+      {
+        "feature": "doctor_sex_unknown",
+        "coefficient": -2.0169597880014356,
+        "abs_coefficient": 2.0169597880014356
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Unauff\u00e4llig ",
+        "coefficient": -1.3316848977386648,
+        "abs_coefficient": 1.3316848977386648
+      },
+      {
+        "feature": "Bergungen_Halskragen ; Rettungsbrett; Beckengurt",
+        "coefficient": 1.1737168034855618,
+        "abs_coefficient": 1.1737168034855618
+      },
+      {
+        "feature": "Bergungen_Angest\u00fctzt Einladen",
+        "coefficient": 1.1385312771718892,
+        "abs_coefficient": 1.1385312771718892
+      },
+      {
+        "feature": "Weitere Diagnosen_Abdominaltrauma als Verletzung Unfall; Kontusion/Distorsion Unfall",
+        "coefficient": 1.089446809294413,
+        "abs_coefficient": 1.089446809294413
+      },
+      {
+        "feature": "Bergungen_Schaufeltrage; Vakuummatratze",
+        "coefficient": -1.073747517657964,
+        "abs_coefficient": 1.073747517657964
+      },
+      {
+        "feature": "Lagerungen_Oberk\u00f6rper erh\u00f6ht; R\u00fcckenlagerung",
+        "coefficient": -1.0704712691920735,
+        "abs_coefficient": 1.0704712691920735
+      },
+      {
+        "feature": "Bergungen_Vakuummatratze; Sam Splint",
+        "coefficient": -1.0581286213351875,
+        "abs_coefficient": 1.0581286213351875
+      },
+      {
+        "feature": "Alle ICD-Codes_S70V (HD)",
+        "coefficient": -1.0357822829295464,
+        "abs_coefficient": 1.0357822829295464
+      },
+      {
+        "feature": "Weitere Diagnosen_Commotio cerebri Unfall; Fraktur Unfall",
+        "coefficient": -1.0327381845440273,
+        "abs_coefficient": 1.0327381845440273
+      },
+      {
+        "feature": "Sauerstoffabgaben_O2 Maske mit Reservoir  8l/min",
+        "coefficient": 0.99238122158104,
+        "abs_coefficient": 0.99238122158104
+      },
+      {
+        "feature": "doctor_sex_female",
+        "coefficient": 0.9845269348458697,
+        "abs_coefficient": 0.9845269348458697
+      },
+      {
+        "feature": "Weitere Diagnosen_Wirbels\u00e4ulentrauma HWS Unfall",
+        "coefficient": -0.9790305158431474,
+        "abs_coefficient": 0.9790305158431474
+      },
+      {
+        "feature": "Sauerstoffabgaben_O2 Maske mit Reservoir  10l/min (15:48:13)",
+        "coefficient": 0.9606652268362756,
+        "abs_coefficient": 0.9606652268362756
+      },
+      {
+        "feature": "Alle ICD-Codes_S62V (HD)",
+        "coefficient": 0.9527659301783526,
+        "abs_coefficient": 0.9527659301783526
+      },
+      {
+        "feature": "Weitere Diagnosen_Hyperventilation Krankheit",
+        "coefficient": -0.9491414855494938,
+        "abs_coefficient": 0.9491414855494938
+      },
+      {
+        "feature": "Lagerungen_Sitzend; Sitzend (Heli-Sitz)",
+        "coefficient": 0.9398654688744058,
+        "abs_coefficient": 0.9398654688744058
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_T29V, T29V",
+        "coefficient": 0.9377334888716208,
+        "abs_coefficient": 0.9377334888716208
+      },
+      {
+        "feature": "Weitere Massnahmen_Rettungsdecke; W\u00e4rmebeutel",
+        "coefficient": -0.9319800476170974,
+        "abs_coefficient": 0.9319800476170974
+      },
+      {
+        "feature": "Bergungen_Rettungsbrett; Vakuummatratze",
+        "coefficient": 0.9300942194455217,
+        "abs_coefficient": 0.9300942194455217
+      }
+    ]
+  },
+  "xgboost": {
+    "importance": [
+      {
+        "feature": "VAS_on_scene",
+        "importance": 0.01023411937057972
+      },
+      {
+        "feature": "doctor_sex_unknown",
+        "importance": 0.008567601442337036
+      },
+      {
+        "feature": "Monat_November",
+        "importance": 0.008015395142138004
+      },
+      {
+        "feature": "Kategorie_Verletzungen; Verletzungen; Verletzungen",
+        "importance": 0.007138045504689217
+      },
+      {
+        "feature": "K\u00f6rperregion_obere Extremit\u00e4t",
+        "importance": 0.007121227215975523
+      },
+      {
+        "feature": "Aktuelles Ereignis_Erkrankung",
+        "importance": 0.0069218906573951244
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Normokard",
+        "importance": 0.006897772196680307
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_S33V",
+        "importance": 0.006754014641046524
+      },
+      {
+        "feature": "Befund Atmung_Atemnot",
+        "importance": 0.006733090151101351
+      },
+      {
+        "feature": "Atemger\u00e4usche_Atemger\u00e4usche normal",
+        "importance": 0.006491813808679581
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_S83V",
+        "importance": 0.00636574300006032
+      },
+      {
+        "feature": "Alle ICD-Codes_S72V (HD)",
+        "importance": 0.006282515358179808
+      },
+      {
+        "feature": "Alle ICD-Codes_S32V (HD)",
+        "importance": 0.006201151292771101
+      },
+      {
+        "feature": "ICD-Code der Hauptdiagnose_S82V",
+        "importance": 0.00612125126644969
+      },
+      {
+        "feature": "Alle ICD-Codes_S62V (HD)",
+        "importance": 0.005986603442579508
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Kein EKG; Normokard",
+        "importance": 0.0059368181973695755
+      },
+      {
+        "feature": "Weitere Massnahmen_Reposition",
+        "importance": 0.005698847584426403
+      },
+      {
+        "feature": "Alle ICD-Codes_S06V (HD)",
+        "importance": 0.005673279985785484
+      },
+      {
+        "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper 30\u00b0 erh\u00f6ht",
+        "importance": 0.005648403894156218
+      },
+      {
+        "feature": "Befund Atmung_Sonstige",
+        "importance": 0.005644509103149176
+      }
+    ]
+  }
+}

@@ -17,7 +17,7 @@ The command fits a logistic regression baseline and an XGBoost classifier, evalu
 - `metrics.json`: evaluation metrics, ROC curves (down-sampled), and feature summaries.
 - `logistic_regression.joblib` and `xgboost_classifier.joblib`: serialized pipelines for downstream scoring.
 
-Use `--multilabel-top-k` to adjust how many tokens are retained per multi-valued categorical column, `--validation-size` to control the internal validation split, and `--n-splits` to change cross-validation folds. Optional flags `--doctor-roster-path`, `--doctor-metadata-path`, and `--reference-year` override the default physician lookup sources when needed.
+Use `--multilabel-top-k` to adjust how many tokens are retained per multi-valued categorical column, `--validation-size` to control the internal validation split, and `--n-splits` to change cross-validation folds. Optional flags `--doctor-roster-path`, `--doctor-metadata-path`, and `--reference-year` override the default physician lookup sources. Enable `--tune-xgb` (with `--xgb-tuning-iterations` and `--xgb-tuning-scoring`) to launch a randomized hyperparameter search for the gradient-boosted model. Pass `--feature-whitelist path/to/list.txt` to restrict training to a curated subset of raw columns.
 
 Running the trainer now produces:
 
