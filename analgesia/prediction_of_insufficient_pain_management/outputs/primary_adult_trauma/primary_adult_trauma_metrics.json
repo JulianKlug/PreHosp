@@ -1,0 +1,30 @@
+{
+  "generated_at": "2025-10-07T10:28:29.219453Z",
+  "cohort": "primary_adult_trauma",
+  "metrics": {
+    "accuracy": 0.596042868920033,
+    "precision": 0.36203866432337434,
+    "recall": 0.6186186186186187,
+    "f1": 0.4567627494456763,
+    "roc_auc": 0.6370546683046684
+  },
+  "population_filter_summary": {
+    "initial": 12269,
+    "excluded_low_vas": 3805,
+    "removed_duplicates": 51,
+    "excluded_non_trauma": 1411,
+    "excluded_secondary": 179,
+    "excluded_pediatric": 762,
+    "final": 6061
+  },
+  "confusion_matrix": [
+    [
+      517,
+      363
+    ],
+    [
+      127,
+      206
+    ]
+  ]
+}

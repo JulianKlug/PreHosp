@@ -49,12 +49,13 @@ class InsufficientPainManagementPredictor:
     - Performance monitoring
     """
     
-    def __init__(self, model_save_dir: str = "models"):
+    def __init__(self, model_save_dir: str = "models", target_population: Optional[str] = "primary_adult_trauma"):
         """
         Initialize the predictor.
         
         Args:
             model_save_dir (str): Directory to save/load models
+            target_population (Optional[str]): Cohort restriction applied during training
         """
         self.model_save_dir = Path(model_save_dir)
         self.model_save_dir.mkdir(exist_ok=True)
@@ -66,11 +67,13 @@ class InsufficientPainManagementPredictor:
         self.feature_names = None
         self.performance_metrics = None
         self.training_timestamp = None
+        self.target_population = target_population
         
         # Model metadata
         self.metadata = {
             'version': '1.0.0',
             'target_definition': 'VAS_on_arrival > 3',
+            'target_population': target_population,
             'features_used': None,
             'training_samples': None,
             'model_performance': None
@@ -99,7 +102,10 @@ class InsufficientPainManagementPredictor:
         
         # Step 1: Load and preprocess data
         logger.info("Step 1: Data preprocessing")
-        self.preprocessor = PainManagementDataProcessor(data_path)
+        self.preprocessor = PainManagementDataProcessor(
+            data_path,
+            target_population=self.target_population
+        )
         processed_data = self.preprocessor.run_full_pipeline()
         
         # Step 2: Prepare modeling data
@@ -156,6 +162,9 @@ class InsufficientPainManagementPredictor:
             },
             'training_date': self.training_timestamp.isoformat()
         })
+
+        if hasattr(self.preprocessor, 'population_filter_summary'):
+            self.metadata['population_filter_summary'] = self.preprocessor.population_filter_summary
         
         logger.info(f"Pipeline training completed. Best model: {self.model_type}")
         logger.info(f"Performance - ROC-AUC: {self.performance_metrics['roc_auc']:.4f}")

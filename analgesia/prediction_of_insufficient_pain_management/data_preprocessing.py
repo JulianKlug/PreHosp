@@ -14,7 +14,7 @@ Date: September 2025
 
 import pandas as pd
 import numpy as np
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.impute import SimpleImputer
@@ -32,7 +32,7 @@ class PainManagementDataProcessor:
     for predicting insufficient pain management based on prehospital variables.
     """
     
-    def __init__(self, data_path: str):
+    def __init__(self, data_path: str, target_population: Optional[str] = "primary_adult_trauma"):
         """
         Initialize the data processor.
         
@@ -47,6 +47,8 @@ class PainManagementDataProcessor:
         self.scalers = {}
         self.encoders = {}
         self.imputers = {}
+        self.target_population = target_population
+        self.population_filter_summary: Dict[str, int] = {}
         
     def load_data(self) -> pd.DataFrame:
         """
@@ -70,7 +72,94 @@ class PainManagementDataProcessor:
         except Exception as e:
             logger.error(f"Error loading data: {str(e)}")
             raise
-    
+
+    def apply_target_population_filter(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Restrict the dataset to the configured target population.
+
+        Currently supports filtering to the primary adult trauma cohort
+        defined in ``target_population.md``.
+
+        Args:
+            df (pd.DataFrame): Raw dataframe loaded from the source.
+
+        Returns:
+            pd.DataFrame: Filtered dataframe.
+        """
+        if self.target_population != "primary_adult_trauma":
+            logger.info("Target population set to '%s'; skipping population filter", self.target_population)
+            self.population_filter_summary = {"initial": len(df), "final": len(df)}
+            return df
+
+        logger.info("Applying primary adult trauma population filter")
+
+        filtered_df = df.copy()
+        summary: Dict[str, int] = {"initial": len(filtered_df)}
+
+        # Helper to safely convert numeric columns
+        def _to_numeric(series: pd.Series) -> pd.Series:
+            return pd.to_numeric(series, errors='coerce') if series is not None else series
+
+        # Step 1: Restrict to missions with VAS_on_scene > 3
+        if "VAS_on_scene" in filtered_df.columns:
+            vas_numeric = _to_numeric(filtered_df["VAS_on_scene"])
+            mask = vas_numeric > 3
+            summary["excluded_low_vas"] = int((~mask).sum())
+            filtered_df = filtered_df[mask]
+        else:
+            logger.warning("Column 'VAS_on_scene' not found; unable to filter by VAS > 3")
+            summary["excluded_low_vas"] = 0
+
+        # Step 2: Drop duplicate events by event identifier
+        event_id_col = "SNZ Ereignis Nr. "
+        if event_id_col in filtered_df.columns:
+            before = len(filtered_df)
+            filtered_df = filtered_df.drop_duplicates(subset=[event_id_col])
+            summary["removed_duplicates"] = before - len(filtered_df)
+        else:
+            logger.warning("Column '%s' not found; skipping duplicate removal", event_id_col)
+            summary["removed_duplicates"] = 0
+
+        # Step 3: Restrict to trauma missions
+        trauma_col = "Einteilung (reduziert)"
+        if trauma_col in filtered_df.columns:
+            trauma_series = filtered_df[trauma_col].astype(str).str.strip()
+            mask = trauma_series == 'Unfall'
+            summary["excluded_non_trauma"] = int((~mask).sum())
+            filtered_df = filtered_df[mask]
+        else:
+            logger.warning("Column '%s' not found; unable to filter non-trauma missions", trauma_col)
+            summary["excluded_non_trauma"] = 0
+
+        # Step 4: Restrict to primary missions
+        primary_col = "Einsatzart"
+        if primary_col in filtered_df.columns:
+            primary_series = filtered_df[primary_col].astype(str).str.strip()
+            mask = primary_series == 'Primär'
+            summary["excluded_secondary"] = int((~mask).sum())
+            filtered_df = filtered_df[mask]
+        else:
+            logger.warning("Column '%s' not found; unable to filter secondary transports", primary_col)
+            summary["excluded_secondary"] = 0
+
+        # Step 5: Restrict to adults (Alter >= 16)
+        age_col = "Alter "
+        if age_col in filtered_df.columns:
+            age_numeric = _to_numeric(filtered_df[age_col])
+            mask = age_numeric >= 16
+            summary["excluded_pediatric"] = int((~mask).sum())
+            filtered_df = filtered_df[mask]
+        else:
+            logger.warning("Column '%s' not found; unable to filter pediatric patients", age_col)
+            summary["excluded_pediatric"] = 0
+
+        summary["final"] = len(filtered_df)
+        self.population_filter_summary = summary
+
+        logger.info("Primary adult trauma filter complete: %s", summary)
+
+        return filtered_df
+
     def create_target_variable(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Create the target variable for insufficient pain management.
@@ -455,7 +544,10 @@ class PainManagementDataProcessor:
         
         # Start with raw data
         df = self.raw_data.copy()
-        
+
+        # Apply population filter if configured
+        df = self.apply_target_population_filter(df)
+
         # Create target variable
         df = self.create_target_variable(df)
         
@@ -495,18 +587,23 @@ class PainManagementDataProcessor:
         return df
 
 
-def load_and_preprocess_data(data_path: str, **kwargs) -> Tuple[pd.DataFrame, PainManagementDataProcessor]:
+def load_and_preprocess_data(
+    data_path: str,
+    target_population: Optional[str] = "primary_adult_trauma",
+    **kwargs
+) -> Tuple[pd.DataFrame, PainManagementDataProcessor]:
     """
     Convenience function to load and preprocess data in one step.
     
     Args:
         data_path (str): Path to the Excel data file
+        target_population (Optional[str]): Target cohort to enforce during preprocessing
         **kwargs: Additional arguments for preprocessing pipeline
         
     Returns:
         Tuple: (processed_dataframe, processor_instance)
     """
-    processor = PainManagementDataProcessor(data_path)
+    processor = PainManagementDataProcessor(data_path, target_population=target_population)
     processed_data = processor.run_full_pipeline(**kwargs)
     return processed_data, processor
 
