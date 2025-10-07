@@ -481,6 +481,45 @@ def _extract_venous_access_features(series: pd.Series) -> pd.DataFrame:
     )
 
 
+def _extract_oxygen_delivery_features(series: pd.Series) -> pd.DataFrame:
+    modes: List[str | float] = []
+    rates: List[float | float] = []
+
+    for value in series:
+        if value is None or pd.isna(value):
+            modes.append(np.nan)
+            rates.append(np.nan)
+            continue
+
+        text = str(value).strip()
+        if not text or text == "-":
+            modes.append(np.nan)
+            rates.append(np.nan)
+            continue
+
+        rate_value = np.nan
+        rate_match = re.search(r"([0-9]+(?:[.,][0-9]+)?)\s*[Ll]\s*/\s*[Mm][Ii][Nn]", text)
+        if rate_match:
+            rate_value = float(rate_match.group(1).replace(",", "."))
+
+        cleaned = re.sub(r"\([^()]*\)", "", text)
+        cleaned = re.sub(r"([0-9]+(?:[.,][0-9]+)?)\s*[Ll]\s*/\s*[Mm][Ii][Nn]", "", cleaned)
+        mode_text = cleaned.strip()
+        mode_text = re.sub(r"\s{2,}", " ", mode_text)
+        mode_text = mode_text if mode_text else np.nan
+
+        modes.append(mode_text)
+        rates.append(rate_value)
+
+    return pd.DataFrame(
+        {
+            "oxygen_delivery_mode": modes,
+            "oxygen_delivery_rate_lpm": rates,
+        },
+        index=series.index,
+    )
+
+
 def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
     features = features.copy()
 
@@ -538,6 +577,10 @@ def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
         access_features = _extract_venous_access_features(features["Zugänge"])
         features = features.drop(columns=["Zugänge"]).join(access_features)
 
+    if "Sauerstoffabgaben" in features.columns:
+        oxygen_features = _extract_oxygen_delivery_features(features["Sauerstoffabgaben"])
+        features = features.drop(columns=["Sauerstoffabgaben"]).join(oxygen_features)
+
     drop_columns = [
         "Detail",
         "ICD-Code der Hauptdiagnose",
@@ -545,8 +588,6 @@ def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
         "Institution",
         "Kategorie (reduziert)",
         "Ort3",
-        "Strasse",
-        "Sauerstoffabgaben",
         "Sprache",
         "Weitere Diagnosen",
         "Zeitpunkt, Messart, Wert",

@@ -3,267 +3,267 @@
     "top_positive": [
       {
         "feature": "venous_access_sizes_G18; G20",
-        "coefficient": 1.8837009533353344
+        "coefficient": 1.8781433969571928
       },
       {
         "feature": "venous_access_locations_Hand; Ellenbeuge",
-        "coefficient": 1.177451163196879
+        "coefficient": 1.2079341970330608
       },
       {
         "feature": "doctor_sex_female",
-        "coefficient": 1.1726508542226022
-      },
-      {
-        "feature": "Weitere Massnahmen_So; ographie",
-        "coefficient": 1.0579871048917326
+        "coefficient": 1.170739284132404
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
-        "coefficient": 1.0495873059008614
+        "coefficient": 1.0718056507798739
+      },
+      {
+        "feature": "Weitere Massnahmen_So; ographie",
+        "coefficient": 1.0437180777227806
       },
       {
         "feature": "doctor_sex_male",
-        "coefficient": 0.9994684919359432
-      },
-      {
-        "feature": "Hautbefund_schweissig, Recap Zeit > 2 Sek",
-        "coefficient": 0.9913695102345751
+        "coefficient": 1.0006653669743382
       },
       {
         "feature": "venous_access_sizes_G18; G14",
-        "coefficient": 0.9674215702685646
-      },
-      {
-        "feature": "K\u00f6rperregion_Kopf, Wirbels\u00e4ule, Thorax",
-        "coefficient": 0.939455736177474
-      },
-      {
-        "feature": "doctor_specialist_qualifications_Child and adolescent psychiatry and psychotherapy",
-        "coefficient": 0.9307293472933686
-      },
-      {
-        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, obere Extremit\u00e4t, untere Extremit\u00e4t",
-        "coefficient": 0.9262291232480259
-      },
-      {
-        "feature": "venous_access_types_Venoes",
-        "coefficient": 0.9260176650605568
+        "coefficient": 0.9928657701207138
       },
       {
         "feature": "Kategorie_Verbrennung; Verbrennung",
-        "coefficient": 0.9097778856896008
+        "coefficient": 0.9482347640348762
+      },
+      {
+        "feature": "K\u00f6rperregion_Kopf, Wirbels\u00e4ule, Thorax",
+        "coefficient": 0.9285103666455743
+      },
+      {
+        "feature": "doctor_specialist_qualifications_Child and adolescent psychiatry and psychotherapy",
+        "coefficient": 0.9276566349179451
+      },
+      {
+        "feature": "venous_access_types_Venoes",
+        "coefficient": 0.9225926665261086
+      },
+      {
+        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, obere Extremit\u00e4t, untere Extremit\u00e4t",
+        "coefficient": 0.9132827671019949
       },
       {
         "feature": "Lebensbedrohliche Blutung_Hals",
-        "coefficient": 0.9073516193377443
+        "coefficient": 0.9109166398846895
       },
       {
         "feature": "Lagerungen_Sitzend (Heli-Sitz); Sitzend",
-        "coefficient": 0.890795756276162
+        "coefficient": 0.8954769250880926
       },
       {
         "feature": "Ort_Davos Platz",
-        "coefficient": 0.8807300169549394
-      },
-      {
-        "feature": "Herzrhytmusst\u00f6rungen_VES; Sinusrhythmus",
-        "coefficient": 0.845258566946889
-      },
-      {
-        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, Thorax, obere Extremit\u00e4t",
-        "coefficient": 0.8340771418049157
+        "coefficient": 0.856916100551827
       },
       {
         "feature": "Weitere Massnahmen_Rettu; gsdecke; So; ographie",
-        "coefficient": 0.8242801238568742
+        "coefficient": 0.8328523789126152
       },
       {
-        "feature": "doctor_specialist_qualifications_Surgery",
-        "coefficient": 0.8211525263491345
+        "feature": "Herzrhytmusst\u00f6rungen_VES; Sinusrhythmus",
+        "coefficient": 0.8317637199804208
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Normokard",
+        "coefficient": 0.8158065585746022
+      },
+      {
+        "feature": "K\u00f6rperregion_Kopf/Gesicht, Thorax, obere Extremit\u00e4t, untere Extremit\u00e4t",
+        "coefficient": 0.8081626540001158
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Unauff\u00e4llig ; Normokard",
+        "coefficient": 0.7956065505318225
       }
     ],
     "top_negative": [
       {
         "feature": "doctor_sex_unknown",
-        "coefficient": -2.332248827184689
+        "coefficient": -2.307421217489575
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
-        "coefficient": -1.6578266136715665
+        "coefficient": -1.6023169033020628
       },
       {
         "feature": "doctor_specialist_qualifications_General Internal Medicine; Anaesthesiology",
-        "coefficient": -1.4441932182013404
+        "coefficient": -1.4300301753175326
       },
       {
         "feature": "K\u00f6rperregion_Thorax, Abdomen",
-        "coefficient": -1.2939935448865312
+        "coefficient": -1.3286408166317896
       },
       {
         "feature": "Befund_Hypoton kleiner 90",
-        "coefficient": -1.1215279228972745
+        "coefficient": -1.1271526947006711
       },
       {
         "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper erh\u00f6ht",
-        "coefficient": -1.0985991830285458
+        "coefficient": -1.0698307861516074
       },
       {
         "feature": "Weitere Massnahmen_Repositio; Thermoflect Decke",
-        "coefficient": -1.0436861312558794
+        "coefficient": -1.0151791504687993
       },
       {
         "feature": "Weitere Massnahmen_Rettu; gsdecke; W\u00e4rmebeutel",
-        "coefficient": -1.006868318395399
+        "coefficient": -0.9796839144303959
       },
       {
         "feature": "venous_access_sizes_G14; G18",
-        "coefficient": -0.8975590014523842
+        "coefficient": -0.8999634560337817
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Tachykardie schmal/breit",
-        "coefficient": -0.7881901941013214
+        "coefficient": -0.7882329697612364
       },
       {
         "feature": "Kategorie_Abdomen; Abdomen",
-        "coefficient": -0.785328394149947
-      },
-      {
-        "feature": "K\u00f6rperregion_Kopf, Thorax, obere Extremit\u00e4t",
-        "coefficient": -0.7723542013838425
+        "coefficient": -0.7806101549556717
       },
       {
         "feature": "doctor_specialist_qualifications_Anaesthesiology; Intensive care medicine",
-        "coefficient": -0.7713629509512075
-      },
-      {
-        "feature": "Herzrhytmusst\u00f6rungen_Sinusrhythmus; Bradykardie",
-        "coefficient": -0.7577274863106793
-      },
-      {
-        "feature": "Ereignisort__davos",
-        "coefficient": -0.7502019930073895
-      },
-      {
-        "feature": "Bergungen__periphiale fixation",
-        "coefficient": -0.728621369428061
-      },
-      {
-        "feature": "Ereignisort__engelberg",
-        "coefficient": -0.7285183487676437
-      },
-      {
-        "feature": "Bein (Bewegung re)_Keine",
-        "coefficient": -0.7212639449369335
+        "coefficient": -0.7735440407320021
       },
       {
         "feature": "Atemger\u00e4usche_Fehlendes Atemger\u00e4usch links",
-        "coefficient": -0.7055741439185861
+        "coefficient": -0.7468315584321218
+      },
+      {
+        "feature": "oxygen_delivery_mode_Sonde/Brille",
+        "coefficient": -0.7349025242477486
+      },
+      {
+        "feature": "Ereignisort__davos",
+        "coefficient": -0.7342266971427779
+      },
+      {
+        "feature": "K\u00f6rperregion_Kopf, Thorax, obere Extremit\u00e4t",
+        "coefficient": -0.7319657509489709
+      },
+      {
+        "feature": "Ereignisort__engelberg",
+        "coefficient": -0.7270925042710504
+      },
+      {
+        "feature": "Bergungen__periphiale fixation",
+        "coefficient": -0.7233518998857518
+      },
+      {
+        "feature": "Kategorie_Verletzungen; Verletzungen; Verletzungen; Verletzungen",
+        "coefficient": -0.7147925346873032
       },
       {
         "feature": "Herzrhytmusst\u00f6rungen_Nicht relevant",
-        "coefficient": -0.7043335999860689
+        "coefficient": -0.7011045432646899
       }
     ],
     "top_magnitude": [
       {
         "feature": "doctor_sex_unknown",
-        "coefficient": -2.332248827184689,
-        "abs_coefficient": 2.332248827184689
+        "coefficient": -2.307421217489575,
+        "abs_coefficient": 2.307421217489575
       },
       {
         "feature": "venous_access_sizes_G18; G20",
-        "coefficient": 1.8837009533353344,
-        "abs_coefficient": 1.8837009533353344
+        "coefficient": 1.8781433969571928,
+        "abs_coefficient": 1.8781433969571928
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
-        "coefficient": -1.6578266136715665,
-        "abs_coefficient": 1.6578266136715665
+        "coefficient": -1.6023169033020628,
+        "abs_coefficient": 1.6023169033020628
       },
       {
         "feature": "doctor_specialist_qualifications_General Internal Medicine; Anaesthesiology",
-        "coefficient": -1.4441932182013404,
-        "abs_coefficient": 1.4441932182013404
+        "coefficient": -1.4300301753175326,
+        "abs_coefficient": 1.4300301753175326
       },
       {
         "feature": "K\u00f6rperregion_Thorax, Abdomen",
-        "coefficient": -1.2939935448865312,
-        "abs_coefficient": 1.2939935448865312
+        "coefficient": -1.3286408166317896,
+        "abs_coefficient": 1.3286408166317896
       },
       {
         "feature": "venous_access_locations_Hand; Ellenbeuge",
-        "coefficient": 1.177451163196879,
-        "abs_coefficient": 1.177451163196879
+        "coefficient": 1.2079341970330608,
+        "abs_coefficient": 1.2079341970330608
       },
       {
         "feature": "doctor_sex_female",
-        "coefficient": 1.1726508542226022,
-        "abs_coefficient": 1.1726508542226022
+        "coefficient": 1.170739284132404,
+        "abs_coefficient": 1.170739284132404
       },
       {
         "feature": "Befund_Hypoton kleiner 90",
-        "coefficient": -1.1215279228972745,
-        "abs_coefficient": 1.1215279228972745
-      },
-      {
-        "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper erh\u00f6ht",
-        "coefficient": -1.0985991830285458,
-        "abs_coefficient": 1.0985991830285458
-      },
-      {
-        "feature": "Weitere Massnahmen_So; ographie",
-        "coefficient": 1.0579871048917326,
-        "abs_coefficient": 1.0579871048917326
+        "coefficient": -1.1271526947006711,
+        "abs_coefficient": 1.1271526947006711
       },
       {
         "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
-        "coefficient": 1.0495873059008614,
-        "abs_coefficient": 1.0495873059008614
+        "coefficient": 1.0718056507798739,
+        "abs_coefficient": 1.0718056507798739
+      },
+      {
+        "feature": "Lagerungen_R\u00fcckenlagerung; Oberk\u00f6rper erh\u00f6ht",
+        "coefficient": -1.0698307861516074,
+        "abs_coefficient": 1.0698307861516074
+      },
+      {
+        "feature": "Weitere Massnahmen_So; ographie",
+        "coefficient": 1.0437180777227806,
+        "abs_coefficient": 1.0437180777227806
       },
       {
         "feature": "Weitere Massnahmen_Repositio; Thermoflect Decke",
-        "coefficient": -1.0436861312558794,
-        "abs_coefficient": 1.0436861312558794
-      },
-      {
-        "feature": "Weitere Massnahmen_Rettu; gsdecke; W\u00e4rmebeutel",
-        "coefficient": -1.006868318395399,
-        "abs_coefficient": 1.006868318395399
+        "coefficient": -1.0151791504687993,
+        "abs_coefficient": 1.0151791504687993
       },
       {
         "feature": "doctor_sex_male",
-        "coefficient": 0.9994684919359432,
-        "abs_coefficient": 0.9994684919359432
-      },
-      {
-        "feature": "Hautbefund_schweissig, Recap Zeit > 2 Sek",
-        "coefficient": 0.9913695102345751,
-        "abs_coefficient": 0.9913695102345751
+        "coefficient": 1.0006653669743382,
+        "abs_coefficient": 1.0006653669743382
       },
       {
         "feature": "venous_access_sizes_G18; G14",
-        "coefficient": 0.9674215702685646,
-        "abs_coefficient": 0.9674215702685646
+        "coefficient": 0.9928657701207138,
+        "abs_coefficient": 0.9928657701207138
+      },
+      {
+        "feature": "Weitere Massnahmen_Rettu; gsdecke; W\u00e4rmebeutel",
+        "coefficient": -0.9796839144303959,
+        "abs_coefficient": 0.9796839144303959
+      },
+      {
+        "feature": "Kategorie_Verbrennung; Verbrennung",
+        "coefficient": 0.9482347640348762,
+        "abs_coefficient": 0.9482347640348762
       },
       {
         "feature": "K\u00f6rperregion_Kopf, Wirbels\u00e4ule, Thorax",
-        "coefficient": 0.939455736177474,
-        "abs_coefficient": 0.939455736177474
+        "coefficient": 0.9285103666455743,
+        "abs_coefficient": 0.9285103666455743
       },
       {
         "feature": "doctor_specialist_qualifications_Child and adolescent psychiatry and psychotherapy",
-        "coefficient": 0.9307293472933686,
-        "abs_coefficient": 0.9307293472933686
-      },
-      {
-        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, obere Extremit\u00e4t, untere Extremit\u00e4t",
-        "coefficient": 0.9262291232480259,
-        "abs_coefficient": 0.9262291232480259
+        "coefficient": 0.9276566349179451,
+        "abs_coefficient": 0.9276566349179451
       },
       {
         "feature": "venous_access_types_Venoes",
-        "coefficient": 0.9260176650605568,
-        "abs_coefficient": 0.9260176650605568
+        "coefficient": 0.9225926665261086,
+        "abs_coefficient": 0.9225926665261086
+      },
+      {
+        "feature": "K\u00f6rperregion_Wirbels\u00e4ule, obere Extremit\u00e4t, untere Extremit\u00e4t",
+        "coefficient": 0.9132827671019949,
+        "abs_coefficient": 0.9132827671019949
       }
     ]
   },
@@ -271,83 +271,83 @@
     "importance": [
       {
         "feature": "VAS_on_scene",
-        "importance": 0.01079531665891409
+        "importance": 0.010686858557164669
       },
       {
         "feature": "doctor_sex_unknown",
-        "importance": 0.008895829319953918
-      },
-      {
-        "feature": "Herzrhytmusst\u00f6rungen_Normokard",
-        "importance": 0.008717859163880348
-      },
-      {
-        "feature": "Bergungen__periphiale fixation",
-        "importance": 0.008661555126309395
-      },
-      {
-        "feature": "venous_access_count",
-        "importance": 0.008487330749630928
-      },
-      {
-        "feature": "doctor_specialist_qualifications_",
-        "importance": 0.008479380048811436
-      },
-      {
-        "feature": "Atemger\u00e4usche_Atemger\u00e4usche normal",
-        "importance": 0.00806704442948103
+        "importance": 0.009525797329843044
       },
       {
         "feature": "Aktuelles Ereignis_Arbeitsger\u00e4te-Verletzung",
-        "importance": 0.008045556023716927
+        "importance": 0.009320057928562164
       },
       {
-        "feature": "Weitere Massnahmen_Thermoflect Decke",
-        "importance": 0.007985608652234077
+        "feature": "venous_access_count",
+        "importance": 0.008639903739094734
       },
       {
-        "feature": "Aktuelles Ereignis_Angefahren/\u00dcberfahren",
-        "importance": 0.007690833415836096
-      },
-      {
-        "feature": "EKG 3-Kanal_Nein",
-        "importance": 0.00744066946208477
-      },
-      {
-        "feature": "venous_access_sizes_G16",
-        "importance": 0.007000289391726255
+        "feature": "Bergungen__periphiale fixation",
+        "importance": 0.008599388413131237
       },
       {
         "feature": "EKG 3-Kanal_Ja",
-        "importance": 0.006992036011070013
+        "importance": 0.008199620991945267
       },
       {
-        "feature": "Bergungen__beckengurt",
-        "importance": 0.00692596985027194
+        "feature": "Weitere Massnahmen_Thermoflect Decke",
+        "importance": 0.008125592023134232
+      },
+      {
+        "feature": "Herzrhytmusst\u00f6rungen_Normokard",
+        "importance": 0.008105011656880379
+      },
+      {
+        "feature": "Atemger\u00e4usche_Atemger\u00e4usche normal",
+        "importance": 0.007234970573335886
+      },
+      {
+        "feature": "doctor_specialist_qualifications_Date of issue:",
+        "importance": 0.006593539845198393
+      },
+      {
+        "feature": "venous_access_preexisting_vorbestehend",
+        "importance": 0.006497190333902836
+      },
+      {
+        "feature": "doctor_specialist_qualifications_Intensive care medicine; Surgery",
+        "importance": 0.0064877294935286045
+      },
+      {
+        "feature": "venous_access_sizes_G16",
+        "importance": 0.006451867520809174
+      },
+      {
+        "feature": "Hautbefund_blass / kalt, Recap Zeit > 2 Sek",
+        "importance": 0.006301616318523884
+      },
+      {
+        "feature": "doctor_specialist_qualifications_Intensive care medicine; General Internal Medicine",
+        "importance": 0.006301054265350103
+      },
+      {
+        "feature": "Weitere Massnahmen_Kei; e",
+        "importance": 0.006291192024946213
+      },
+      {
+        "feature": "Kategorie_Verletzungen; Verletzungen; Verletzungen",
+        "importance": 0.006290380842983723
       },
       {
         "feature": "Temperatur",
-        "importance": 0.00670004403218627
+        "importance": 0.006267352495342493
       },
       {
-        "feature": "Tag oder Nacht_Tag",
-        "importance": 0.006643482483923435
+        "feature": "venous_access_inserted_by_Keine Rolle vorhanden",
+        "importance": 0.006253957748413086
       },
       {
-        "feature": "Ist ven\u00f6s bestehend_Nein",
-        "importance": 0.006608117371797562
-      },
-      {
-        "feature": "Monat_April",
-        "importance": 0.00657974649220705
-      },
-      {
-        "feature": "Atemger\u00e4usche_Abgeschw\u00e4chtes Atemger\u00e4usch links",
-        "importance": 0.006557127460837364
-      },
-      {
-        "feature": "doctor_specialist_qualifications_Intensive care medicine; Anaesthesiology",
-        "importance": 0.006476277951151133
+        "feature": "Bergungen__winde horizontalnetz",
+        "importance": 0.006152810528874397
       }
     ]
   }
