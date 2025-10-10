@@ -44,7 +44,7 @@ from xgboost import XGBClassifier
 
 from scipy.stats import loguniform, randint, uniform
 
-from analgesia.predictor.transformers import MultiLabelTopKEncoder
+from analgesia.explorative_predictor.transformers import MultiLabelTopKEncoder
 
 
 COLUMN_ALIASES: Dict[str, str] = {
@@ -75,7 +75,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--available-columns",
         type=Path,
-        default=Path("analgesia/predictor/available_columns.md"),
+        default=Path("analgesia/explorative_predictor/available_columns.md"),
         help="Markdown file enumerating features available pre-hospital",
     )
     parser.add_argument(
@@ -135,7 +135,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--xgb-tuning-scoring",
         type=str,
-        default="average_precision",
+        default="roc_auc",
         help="Scikit-learn scoring metric used during XGBoost tuning",
     )
     parser.add_argument(
@@ -1063,7 +1063,6 @@ def main() -> None:
         args.reference_year,
     )
     features = tidy_location_features(features)
-
     if args.refine_features:
         logging.info("Applying feature modifications")
         features = apply_feature_modifications(features)
