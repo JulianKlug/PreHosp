@@ -1,6 +1,6 @@
 # Feature Catalog
 
-This catalog documents the feature inputs used by the current analgesia predictive models (logistic regression and XGBoost) trained via `analgesia/predictor/train_predictor.py`. Both models share the same feature set, preprocessing logic, and encoders.
+This catalog documents the feature inputs used by the analgesia predictive models (logistic regression and XGBoost) trained via `analgesia/predictor/train_predictor.py` when refined features are used. Both models share the same feature set, preprocessing logic, and encoders.
 
 ## Encoding Overview
 - Numeric features are imputed with the median and standardised.
