@@ -1,5 +1,0 @@
-| Split | n | Outcome % | Age mean (SD) | Female patients % | Female physicians % | VAS_on_scene mean (SD) | NACA mean (SD) |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| Training | 3307 | 32.2% | 46.8 ± 19.4 | 39.6% | 45.5% | 6.9 ± 1.7 | NA |
-| Validation | 827 | 32.2% | 46.6 ± 19.3 | 41.1% | 47.0% | 6.8 ± 1.8 | NA |
-| Testing | 1034 | 32.2% | 45.3 ± 18.9 | 40.6% | 44.3% | 6.9 ± 1.8 | NA |
