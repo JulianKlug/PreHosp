@@ -13,7 +13,7 @@ from sklearn.calibration import calibration_curve
 from sklearn.metrics import auc, precision_recall_curve, roc_auc_score, roc_curve
 from sklearn.model_selection import train_test_split
 
-from analgesia.predictor.train_predictor import (
+from analgesia.explorative_predictor.train_predictor import (
     augment_physician_features,
     drop_low_information_columns,
     load_filtered_dataset,
@@ -30,19 +30,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--metrics-path",
         type=Path,
-        default=Path("analgesia/predictor/artifacts/metrics.json"),
+        default=Path("analgesia/explorative_predictor/artifacts/metrics.json"),
         help="Path to JSON metrics output",
     )
     parser.add_argument(
         "--logistic-model",
         type=Path,
-        default=Path("analgesia/predictor/artifacts/logistic_regression.joblib"),
+        default=Path("analgesia/explorative_predictor/artifacts/logistic_regression.joblib"),
         help="Path to fitted logistic regression pipeline",
     )
     parser.add_argument(
         "--xgb-model",
         type=Path,
-        default=Path("analgesia/predictor/artifacts/xgboost_classifier.joblib"),
+        default=Path("analgesia/explorative_predictor/artifacts/xgboost_classifier.joblib"),
         help="Path to fitted XGBoost pipeline",
     )
     parser.add_argument(
@@ -54,7 +54,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--available-columns",
         type=Path,
-        default=Path("analgesia/predictor/available_columns.md"),
+        default=Path("analgesia/explorative_predictor/available_columns.md"),
         help="Markdown describing prehospital columns",
     )
     parser.add_argument(
@@ -320,7 +320,7 @@ def plot_xgb_feature_importance(contribs: dict, output_dir: Path, top_n: int = 1
     translations = {
         "Alter ": "Age",
         "Geschlecht": "Sex",
-        "VAS_on_scene": "VAS on scene",
+        "VAS_on_scene": "NRS on scene",
         "NACA (nummerisch)": "NACA",
         "HF": "Heart rate",
         "SPO2": "SpO2",

@@ -81,7 +81,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("analgesia/predictor/artifacts"),
+        default=Path("analgesia/explorative_predictor/artifacts"),
         help="Directory where models and metrics will be saved",
     )
     parser.add_argument(
