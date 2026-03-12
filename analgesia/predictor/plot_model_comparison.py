@@ -13,7 +13,7 @@ from sklearn.calibration import calibration_curve
 from sklearn.metrics import auc, precision_recall_curve, roc_auc_score, roc_curve
 from sklearn.model_selection import train_test_split
 
-from .train_predictor import (
+from analgesia.predictor.train_predictor import (
     augment_physician_features,
     drop_low_information_columns,
     load_filtered_dataset,
@@ -68,6 +68,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("analgesia/temp_data/final_complete_extractions_20251001_190933.xlsx"),
         help="Physician metadata with birth year and specialisations",
+    )
+    parser.add_argument(
+        "--refine-features",
+        action="store_true",
+        help="Apply feature modifications",
     )
     parser.add_argument(
         "--reference-year",
@@ -309,18 +314,68 @@ def plot_logistic_feature_importance(contribs: dict, output_dir: Path, top_n: in
         plt.close(fig)
 
 
-def plot_xgb_feature_importance(contribs: dict, output_dir: Path, top_n: int = 15) -> None:
+def plot_xgb_feature_importance(contribs: dict, output_dir: Path, top_n: int = 10) -> None:
+    """Plot XGBoost feature importances with English translations and proper label fitting."""
+    # Translation dictionary for common German feature names
+    translations = {
+        "Alter ": "Age",
+        "Geschlecht": "Sex",
+        "VAS_on_scene": "VAS on scene",
+        "NACA (nummerisch)": "NACA",
+        "HF": "Heart rate",
+        "SPO2": "SpO2",
+        "IBD Systolisch": "Systolic BP (invasive)",
+        "IBD Diastolisch": "Diastolic BP (invasive)",
+        "NIBD Systolisch": "Systolic BP (non-invasive)",
+        "NIBD Diastolisch": "Diastolic BP (non-invasive)",
+        "systolic": "Systolic BP",
+        "diastolic": "Diastolic BP",
+        "heart_rate": "Heart rate",
+        "naca": "NACA",
+        "Aktuelles Ereignis": "Current event",
+        "Einsatzart": "Mission type",
+        "PLZ": "Postal code",
+        "doctor_sex": "Physician sex",
+        "doctor_age": "Physician age",
+        "Weitere Massnahmen": "Additional measures",
+        "venous_access_count": "Venous access count",
+        # ['Aktuelles Ereignis_Arbeitsgeräte-Verletzung', 'Herzrhytmusstörungen_Normokard', 'Zugänge__n. vorbestehend', 'EKG 3-Kanal_Nein', 'Bergungen__periphiale fixation', 'Weitere Massnahmen_Thermoflect Decke; Wärmebeutel', 'doctor_specialist_qualifications_Anaesthesiology, \nIntensive care medicine', 'ICD-Code der Hauptdiagnose_S39V', 'VAS_on_scene', 'Zugänge__-']
+        'Aktuelles Ereignis_Arbeitsgeräte-Verletzung': 'Work tool injury',
+        'Herzrhytmusstörungen_Normokard': 'Heart rhythm normal',
+        'Zugänge__n. vorbestehend': 'New venous access',
+        'EKG 3-Kanal_Nein': 'No 3-lead ECG applied',
+        'Bergungen__periphiale fixation': 'Peripheral fixation',
+        'Weitere Massnahmen_Thermoflect Decke; Wärmebeutel': 'Thermoflect blanket and heat pack applied',
+        'doctor_specialist_qualifications_Anaesthesiology, \nIntensive care medicine': 'Physician with anesthesiology and \nintensive care medicine specialisation',
+        'ICD-Code der Hauptdiagnose_S39V': 'Abdomen/pelvis injury',
+        'Zugänge__-': 'No venous access'
+    }
+    
     importance = contribs.get("importance", [])[:top_n]
     if not importance:
         return
+    
     features = [item["feature"] for item in importance][::-1]
     values = [item["importance"] for item in importance][::-1]
-    fig, ax = plt.subplots(figsize=(7, 5))
-    ax.barh(features, values, color="#ff7f0e")
+    
+    # Translate feature names
+    translated_features = []
+    for feature in features:
+        # Remove preprocessing prefixes like "numeric__", "categorical__", "multilabel__"
+        # clean_feature = feature.split("__")[-1] if "__" in feature else feature
+        # Apply translation if available, otherwise use the clean feature name
+        translated = translations.get(feature, feature)
+        translated_features.append(translated)
+    
+    # Adjust figure size to accommodate labels (wider for longer labels)
+    fig, ax = plt.subplots(figsize=(9, max(5, len(translated_features) * 0.4)))
+    ax.barh(translated_features, values, color="#ff7f0e")
     ax.set_xlabel("Gain Importance")
     ax.set_title("XGBoost – Top Feature Importances")
-    fig.tight_layout()
-    fig.savefig(output_dir / "xgboost_feature_importance.png", dpi=300)
+    
+    # Ensure all labels are visible
+    fig.tight_layout(pad=1.5)
+    fig.savefig(output_dir / "xgboost_feature_importance.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -345,7 +400,10 @@ def main() -> None:
         args.reference_year,
     )
     features = tidy_location_features(features)
-    features = apply_feature_modifications(features)
+
+    if args.refine_features:
+        features = apply_feature_modifications(features)
+
     roles = detect_feature_roles(features.copy())
     features_model = features.copy()
     roles = drop_low_information_columns(features_model, roles)

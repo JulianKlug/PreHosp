@@ -44,7 +44,7 @@ from xgboost import XGBClassifier
 
 from scipy.stats import loguniform, randint, uniform
 
-from .transformers import MultiLabelTopKEncoder
+from analgesia.predictor.transformers import MultiLabelTopKEncoder
 
 
 COLUMN_ALIASES: Dict[str, str] = {
@@ -95,6 +95,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("analgesia/temp_data/final_complete_extractions_20251001_190933.xlsx"),
         help="Path to metadata file with physician birth years and specialisations",
+    )
+    parser.add_argument(
+        "--refine-features",
+        action="store_true",
+        help="Apply feature modifications",
     )
     parser.add_argument(
         "--reference-year",
@@ -156,6 +161,26 @@ def configure_logging() -> None:
 
 
 def parse_allowed_columns(md_path: Path, dataset_columns: Sequence[str]) -> Tuple[List[str], List[str]]:
+    """Parse allowed feature columns from a markdown file and resolve them against dataset columns.
+    
+    This function reads a markdown file containing a list of feature column names that are
+    available in the pre-hospital setting. It parses the file by splitting on tabs and colons,
+    then matches each column against the actual dataset columns (applying any defined aliases).
+    
+    Args:
+        md_path: Path to the markdown file containing allowed column names.
+        dataset_columns: Sequence of actual column names present in the dataset.
+    
+    Returns:
+        A tuple containing:
+        - resolved: List of column names that were successfully matched to the dataset.
+        - missing: List of column names from the markdown file that were not found in the dataset.
+    
+    Note:
+        - The function stops parsing when it encounters a blank line after finding columns.
+        - Column aliases defined in COLUMN_ALIASES are applied during matching.
+        - Duplicate columns are automatically filtered out from the resolved list.
+    """
     text = md_path.read_text(encoding="utf-8")
     columns: List[str] = []
     for raw_line in text.splitlines():
@@ -521,6 +546,15 @@ def _extract_oxygen_delivery_features(series: pd.Series) -> pd.DataFrame:
 
 
 def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
+    # Features to be modified
+    # The following features should be modified in preprocessing:
+    # - HF & HR should be joined
+    # - IBD Diastolisch & NIBD Diastolisch should be joined into diastolic
+    # - IBD Systolisch & NIBD Systolisch should be joined into systolic
+    # - NACA & NACA (nummerisch) should be joined
+    # - Weitere Massnahmen should be a Multi-label text feature
+    # - Features to be dropped: Detail, ICD-Code der Hauptdiagnose, Alle ICD-Codes, Institution, Kategorie (reduziert), Ort3, Ort, Strasse, Sauerstoffabgaben, Sprache, Weitere Diagnosen, Zeitpunkt, Messart, Wert, Zugänge, (Be)-Atmung / Beatmung / Befund Atmung, Auffälligkeiten, Arme, Ereignisort2, PLZ and PLZ4
+    
     features = features.copy()
 
     features = _coalesce_numeric_columns(
@@ -588,6 +622,8 @@ def apply_feature_modifications(features: pd.DataFrame) -> pd.DataFrame:
         "Institution",
         "Kategorie (reduziert)",
         "Ort3",
+        "Ort",
+        "Strasse",
         "Sprache",
         "Weitere Diagnosen",
         "Zeitpunkt, Messart, Wert",
@@ -1027,7 +1063,10 @@ def main() -> None:
         args.reference_year,
     )
     features = tidy_location_features(features)
-    features = apply_feature_modifications(features)
+
+    if args.refine_features:
+        logging.info("Applying feature modifications")
+        features = apply_feature_modifications(features)
 
     if args.feature_whitelist:
         whitelist_raw = [line for line in args.feature_whitelist.read_text(encoding="utf-8").splitlines() if line.strip()]

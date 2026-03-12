@@ -1,11 +1,11 @@
 # Analgesia Prediction Tool
 
-This module trains two supervised models to predict insufficient analgesia at hospital arrival (VAS_on_arrival > 3) using only prehospital data.
+This module trains two supervised models to predict insufficient analgesia at hospital arrival (VAS_on_arrival > 3) using only prehospital data in an adult trauma patient population.
 
 ## Workflow
 
 1. Activate the `prehosp` conda environment and make sure it includes `pandas`, `numpy`, `scikit-learn`, `xgboost`, `scipy`, `openpyxl`, and `joblib`.
-2. Ensure the Excel data file `analgesia/temp_data/trauma_categories_Rega Pain Study15.09.2025_v2.xlsx` is available.
+2. Ensure the training Excel data file is available.
 3. Run the training script:
 
 ```bash
