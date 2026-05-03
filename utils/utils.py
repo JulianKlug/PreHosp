@@ -2,6 +2,7 @@ import pandas as pd
 from typing import Iterable, List
 import numpy as np
 import re
+import statsmodels.api as sm
 
 
 def _extract_venous_access_features(series: pd.Series) -> pd.DataFrame:
@@ -83,6 +84,48 @@ def _extract_venous_access_features(series: pd.Series) -> pd.DataFrame:
         },
         index=series.index,
     )
+
+# Univariate logistic regression analysis
+def univariate_logistic_regression(df, outcome_var, predictor_vars):
+    """
+    Perform univariate logistic regression for each predictor variable
+    """
+    results = []
+    
+    for var in predictor_vars:
+        # Prepare data
+        X = df[[var]].copy()
+        y = df[outcome_var]
+        
+        # Add constant for intercept
+        X_with_const = sm.add_constant(X)
+        
+        # Fit logistic regression
+        try:
+            model = sm.Logit(y, X_with_const).fit(disp=0)
+            
+            # Extract results
+            coef = model.params[var]
+            or_value = np.exp(coef)
+            ci_lower = np.exp(model.conf_int().loc[var, 0])
+            ci_upper = np.exp(model.conf_int().loc[var, 1])
+            p_value = model.pvalues[var]
+            
+            results.append({
+                'Variable': var,
+                'Coefficient': coef,
+                'OR': or_value,
+                'CI_lower': ci_lower,
+                'CI_upper': ci_upper,
+                'P_value': p_value,
+                'OR_CI': f"{or_value:.2f} ({ci_lower:.2f}-{ci_upper:.2f})",
+                'P_formatted': f"{p_value:.3f}" if p_value >= 0.001 else "<0.001"
+            })
+            
+        except Exception as e:
+            print(f"Error with variable {var}: {e}")
+            
+    return pd.DataFrame(results)
 
 def _join_unique_tokens(tokens: Iterable[str]) -> str | float:
     unique_tokens: List[str] = []
